@@ -98,7 +98,7 @@ MySQL prompt અંદર નીચેના જેવું ચલાવો (**
 
 ```sql
 CREATE DATABASE IF NOT EXISTS carnest CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-CREATE USER IF NOT EXISTS 'carnest'@'localhost' IDENTIFIED BY 'YOUR_STRONG_DB_PASSWORD_HERE';
+CREATE USER IF NOT EXISTS 'carnest'@'localhost' IDENTIFIED BY 'Heric@1211';
 GRANT ALL PRIVILEGES ON carnest.* TO 'carnest'@'localhost';
 FLUSH PRIVILEGES;
 EXIT;
@@ -218,6 +218,8 @@ openssl rand -hex 32
 
 ## 9) Backend — build અને PM2
 
+**મહત્વપૂર્ણ:** `npm run build` માટે **TypeScript** જોઈએ — તે `devDependencies` માં છે. જો તમે `npm ci --omit=dev` અથવા `npm install --production` ચલાવ્યું હોય તો `tsc` નહીં મળે અને **`dist/` બનશે જ નહીં.** પહેલાં સામાન્ય `npm ci` (અથવા `npm install`) ચલાવો, પછી બિલ્ડ.
+
 ```bash
 cd /var/www/carnest/server
 ```
@@ -226,9 +228,23 @@ cd /var/www/carnest/server
 npm ci
 ```
 
+જો પહેલેથી production-only install કર્યું હોય:
+
+```bash
+npm install --include=dev
+```
+
 ```bash
 npm run build
 ```
+
+ચેક કરો કે `dist/index.js` બન્યું:
+
+```bash
+ls -la dist/
+```
+
+જો `npm run build` એરર આપે, એ લાઇનો ફિક્સ કર્યા વગર PM2 ચાલશે નહીં. **`pm2 start src/index.ts` ન ચલાવો** — PM2 `.ts` માટે Bun શોધે છે અને એ ફેલ થાય છે. હંમેશા પહેલાં `tsc`, પછી `dist/index.js`.
 
 PM2 થી ચાલુ કરો:
 
@@ -389,6 +405,14 @@ sudo systemctl reload nginx
 ```bash
 sudo apt install -y certbot python3-certbot-nginx
 ```
+
+જો `www.carnest.in` માટે DNS સેટ નથી, તો ફક્ત:
+
+```bash
+sudo certbot --nginx -d carnest.in
+```
+
+જો `www` માટે પણ A/CNAME record છે:
 
 ```bash
 sudo certbot --nginx -d carnest.in -d www.carnest.in
