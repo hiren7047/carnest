@@ -1,0 +1,131 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&family=Inter:wght@300;400;500;600&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    /* #F8FAFC */
+    --background: 210 40% 98%;
+    --foreground: 215 28% 17%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 215 28% 17%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 215 28% 17%;
+
+    /* #0F172A */
+    --primary: 222 47% 11%;
+    --primary-foreground: 210 40% 98%;
+
+    /* #F97316 */
+    --secondary: 24 95% 53%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 210 20% 95%;
+    --muted-foreground: 215 16% 47%;
+
+    --accent: 40 50% 62%;
+    --accent-foreground: 222 82% 11%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 210 40% 98%;
+
+    --border: 214 32% 91%;
+    --input: 214 32% 91%;
+    --ring: 24 94% 53%;
+    --whatsapp: 142 70% 40%;
+
+    --radius: 0.75rem;
+
+    --sidebar-background: 222 82% 11%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 24 94% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 70% 18%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 222 70% 18%;
+    --sidebar-ring: 24 94% 53%;
+
+    --gold: 40 50% 62%;
+    --navy: 222 82% 11%;
+    --orange: 24 94% 53%;
+  }
+
+  .dark {
+    --background: 222 82% 6%;
+    --foreground: 210 40% 98%;
+    --card: 222 82% 9%;
+    --card-foreground: 210 40% 98%;
+    --popover: 222 82% 9%;
+    --popover-foreground: 210 40% 98%;
+    --primary: 24 94% 53%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 222 70% 18%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 222 70% 14%;
+    --muted-foreground: 215 20% 65%;
+    --accent: 40 50% 62%;
+    --accent-foreground: 222 82% 11%;
+    --destructive: 0 63% 31%;
+    --destructive-foreground: 210 40% 98%;
+    --border: 222 70% 18%;
+    --input: 222 70% 18%;
+    --ring: 24 94% 53%;
+    --sidebar-background: 222 82% 6%;
+    --sidebar-foreground: 210 40% 98%;
+    --sidebar-primary: 24 94% 53%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 222 70% 14%;
+    --sidebar-accent-foreground: 210 40% 98%;
+    --sidebar-border: 222 70% 14%;
+    --sidebar-ring: 24 94% 53%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-body antialiased;
+    text-size-adjust: 100%;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
+  }
+}
+
+@layer utilities {
+  /** Bottom padding for fixed UI above iOS home indicator */
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /** Top padding for notch / status bar (use with nav offset in components) */
+  .pt-safe {
+    padding-top: env(safe-area-inset-top, 0px);
+  }
+
+  .hover-lift {
+    @apply transition-all duration-300 hover:-translate-y-1 hover:shadow-xl;
+  }
+
+  .glass {
+    @apply bg-white/80 backdrop-blur-md;
+  }
+
+  .gradient-overlay {
+    background: linear-gradient(180deg, rgba(15, 23, 42, 0.7) 0%, rgba(15, 23, 42, 0.9) 100%);
+  }
+
+  .text-gradient-gold {
+    @apply bg-clip-text text-transparent;
+    background-image: linear-gradient(135deg, hsl(var(--gold)) 0%, hsl(40 60% 72%) 100%);
+  }
+}
