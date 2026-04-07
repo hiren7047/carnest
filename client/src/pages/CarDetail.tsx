@@ -209,7 +209,10 @@ const CarDetail = () => {
                   />
                 </button>
               </div>
-              <div className="flex flex-wrap gap-2">
+              <div
+                className="-mx-1 flex gap-2 overflow-x-auto overflow-y-hidden px-1 pb-2 pt-1 scroll-smooth [-webkit-overflow-scrolling:touch] [scrollbar-width:thin]"
+                aria-label="Gallery thumbnails"
+              >
                 {images.map((img, i) => (
                   <button
                     key={i}
@@ -218,7 +221,7 @@ const CarDetail = () => {
                       setActiveImg(i);
                       carouselApi?.scrollTo(i);
                     }}
-                    className={`flex h-[4.5rem] w-[5.5rem] shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 bg-muted/50 transition-colors ${
+                    className={`flex h-[4.5rem] w-[5.5rem] shrink-0 snap-start items-center justify-center overflow-hidden rounded-lg border-2 bg-muted/50 transition-colors ${
                       i === activeImg ? "border-secondary ring-2 ring-secondary/30" : "border-border/60"
                     }`}
                   >

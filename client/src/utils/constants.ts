@@ -18,6 +18,9 @@ export const brands = [
 
 export const fuelTypes = ["Petrol", "Diesel", "Electric", "Hybrid", "CNG"];
 
+/** Sell form: only these three options */
+export const sellFuelTypes = ["Petrol", "Diesel", "CNG"] as const;
+
 export const transmissions = ["Automatic", "Manual"];
 
 export const locations = ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Pune", "Chennai"];

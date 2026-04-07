@@ -54,9 +54,13 @@ export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
           ))}
         </nav>
 
-        <div className="border-t border-zinc-800 p-4 space-y-2 bg-zinc-950">
+        <div className="border-t border-zinc-800 space-y-2 bg-zinc-950 p-4">
           {user?.role === "admin" && (
-            <Button variant="outline" className="w-full border-zinc-700 text-zinc-100 hover:bg-zinc-900" asChild>
+            <Button
+              variant="outline"
+              className="w-full border-zinc-500 bg-zinc-900 font-semibold text-zinc-50 hover:bg-zinc-800 hover:text-white"
+              asChild
+            >
               <Link to="/admin" onClick={close}>
                 Admin
               </Link>
@@ -64,14 +68,18 @@ export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
           )}
           {user ? (
             <>
-              <Button variant="outline" className="w-full border-zinc-700 text-zinc-100 hover:bg-zinc-900" asChild>
+              <Button
+                variant="outline"
+                className="w-full border-zinc-500 bg-zinc-900 font-semibold text-zinc-50 hover:bg-zinc-800 hover:text-white"
+                asChild
+              >
                 <Link to="/dashboard" onClick={close}>
                   Dashboard
                 </Link>
               </Button>
               <Button
                 variant="secondary"
-                className="w-full"
+                className="w-full font-semibold"
                 onClick={() => {
                   logout();
                   close();
@@ -82,12 +90,16 @@ export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
             </>
           ) : (
             <>
-              <Button variant="outline" className="w-full border-zinc-700 text-zinc-100 hover:bg-zinc-900" asChild>
+              <Button
+                variant="outline"
+                className="w-full border-zinc-500 bg-zinc-900 font-semibold text-zinc-50 shadow-none hover:bg-zinc-800 hover:text-white"
+                asChild
+              >
                 <Link to="/login" onClick={close}>
                   Sign In
                 </Link>
               </Button>
-              <Button variant="cta" className="w-full" asChild>
+              <Button variant="cta" className="w-full font-semibold" asChild>
                 <Link to="/register" onClick={close}>
                   Join
                 </Link>

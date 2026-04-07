@@ -1,7 +1,8 @@
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { Car, Upload, User, Phone, Mail, MapPin } from "lucide-react";
+import { Car, Upload, User, Phone, Mail, MapPin, ChevronDown } from "lucide-react";
+import { sellFuelTypes } from "@/utils/constants";
 import { useState, useRef } from "react";
 import { submitSellRequest } from "@/services/sell.service";
 import { toast } from "sonner";
@@ -136,7 +137,26 @@ const SellYourCar = () => {
                 <Field label="Brand" icon={Car} name="brand" placeholder="e.g. Mercedes-Benz" />
                 <Field label="Model" icon={Car} name="model" placeholder="e.g. C-Class" />
                 <Field label="Year" icon={Car} name="year" type="number" placeholder="e.g. 2022" />
-                <Field label="Fuel Type" icon={Car} name="fuel" placeholder="Petrol / Diesel" />
+                <div>
+                  <label className="text-xs font-medium text-muted-foreground mb-1 block">Fuel Type</label>
+                  <div className="relative">
+                    <Car className="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+                    <select
+                      required
+                      value={form.fuel}
+                      onChange={(e) => update("fuel", e.target.value)}
+                      className="h-11 w-full appearance-none rounded-lg border border-border bg-card pl-10 pr-9 text-sm text-foreground focus:outline-none focus:ring-2 focus:ring-secondary"
+                    >
+                      <option value="">Select fuel</option>
+                      {sellFuelTypes.map((f) => (
+                        <option key={f} value={f}>
+                          {f}
+                        </option>
+                      ))}
+                    </select>
+                    <ChevronDown className="pointer-events-none absolute right-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                  </div>
+                </div>
                 <Field label="Transmission" icon={Car} name="transmission" placeholder="Automatic" />
                 <Field label="KM Driven" icon={Car} name="km" type="number" placeholder="e.g. 25000" />
                 <Field label="Expected Price (₹)" icon={Car} name="price" type="number" placeholder="e.g. 3500000" />
