@@ -1,16 +1,11 @@
 import { useEffect, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useLocation } from "react-router-dom";
 import { ArrowUp, MessageCircle, Phone } from "lucide-react";
 import { whatsAppChatUrl, PRESET_FLOAT_ENQUIRY } from "@/utils/whatsapp";
 import { getPublicPhoneTelHref } from "@/utils/phone";
 import { fetchSitePublic } from "@/services/sitePublic.service";
-import { cn } from "@/lib/utils";
 
 export function FloatingActions() {
-  const { pathname } = useLocation();
-  /** On home, FABs sit on the left on small screens so they do not cover the hero search card. */
-  const homeMobileFab = pathname === "/";
   const [showScrollTop, setShowScrollTop] = useState(false);
   const { data } = useQuery({
     queryKey: ["site", "public"],
@@ -27,12 +22,7 @@ export function FloatingActions() {
   }, []);
 
   return (
-    <div
-      className={cn(
-        "fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] z-40 flex flex-col gap-2 md:bottom-6 md:right-6 md:gap-3",
-        homeMobileFab ? "left-3 md:left-auto" : "right-3"
-      )}
-    >
+    <div className="fixed bottom-[calc(4rem+env(safe-area-inset-bottom,0px))] right-3 z-40 flex flex-col gap-2 md:bottom-6 md:right-6 md:gap-3">
       {showScrollTop && (
         <button
           type="button"

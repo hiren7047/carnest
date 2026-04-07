@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { brands, fuelTypes, locations } from "@/utils/constants";
+import { brands, fuelTypes, modelYears } from "@/utils/constants";
 import heroBg from "@/assets/hero-car.jpg";
 import { useSiteContent } from "@/hooks/useSitePublic";
 import { cn } from "@/lib/utils";
@@ -86,7 +86,7 @@ const HeroSection = () => {
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4">
             <SelectField label="Brand" value={brand} onChange={setBrand} options={brands} />
             <SelectField label="Fuel Type" value={fuel} onChange={setFuel} options={fuelTypes} />
-            <SelectField label="Location" value={location} onChange={setLocation} options={locations} />
+            <SelectField label="Year" value={year} onChange={setYear} options={modelYears} />
             <Link to={carsHref} className="flex sm:col-span-2 lg:col-span-1">
               <Button variant="cta" className="min-h-[48px] w-full gap-2 text-sm font-semibold">
                 <Search className="h-4 w-4 shrink-0" />

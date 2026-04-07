@@ -8,6 +8,7 @@ export type ApiCar = {
   model: string;
   year: number;
   price: number;
+  market_price?: number | null;
   fuel_type: string;
   transmission: string;
   km_driven: number;
@@ -37,6 +38,7 @@ export type CarView = {
   brand: string;
   model: string;
   price: number;
+  marketPrice?: number | null;
   year: number;
   kmDriven: number;
   fuelType: string;
@@ -59,6 +61,7 @@ export function mapApiCarToView(c: ApiCar): CarView {
     brand: c.brand,
     model: c.model,
     price: c.price,
+    marketPrice: c.market_price != null ? c.market_price : null,
     year: c.year,
     kmDriven: c.km_driven,
     fuelType: c.fuel_type,

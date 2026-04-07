@@ -276,6 +276,14 @@ curl -s http://127.0.0.1:4000/api/health
 
 `{"ok":true,"database":"connected"}` જેવું JSON આવવું જોઈએ.
 
+જો ડેટાબેઝ પહેલાં બનાવેલો હોય અને `cars.market_price` કૉલમ ન હોય (ડ્યુઅલ પ્રાઇસ માટે), એક વાર:
+
+```bash
+mysql -u root -p carnest < /var/www/carnest/server/sql/add-market-price.sql
+```
+
+(અથવા સમાન `ALTER TABLE` SQL મેન્યુઅલ ચલાવો.)
+
 ---
 
 ## 10) Admin user (જરૂર હોય તો)

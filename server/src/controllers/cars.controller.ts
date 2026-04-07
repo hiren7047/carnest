@@ -21,6 +21,7 @@ export async function listCars(req: Request, res: Response): Promise<void> {
     const fuel_type = req.query.fuel_type as string | undefined;
     const transmission = req.query.transmission as string | undefined;
     const location = req.query.location as string | undefined;
+    const yearQ = req.query.year != null ? Number(req.query.year) : undefined;
     const featured = parseBool(req.query.featured);
 
     const sortField = req.query.sort === "price" ? "price" : "year";
@@ -31,6 +32,9 @@ export async function listCars(req: Request, res: Response): Promise<void> {
     if (fuel_type) where.fuel_type = fuel_type;
     if (transmission) where.transmission = transmission;
     if (location) where.location = location;
+    if (yearQ != null && !Number.isNaN(yearQ) && yearQ >= 1990 && yearQ <= 2035) {
+      where.year = yearQ;
+    }
     if (featured === true) where.is_featured = true;
     const minOk = minPrice != null && !Number.isNaN(minPrice);
     const maxOk = maxPrice != null && !Number.isNaN(maxPrice);
@@ -68,6 +72,7 @@ function serializeCar(c: Car) {
     model: c.model,
     year: c.year,
     price: Number(c.price),
+    market_price: c.market_price != null ? Number(c.market_price) : null,
     fuel_type: c.fuel_type,
     transmission: c.transmission,
     km_driven: c.km_driven,
@@ -133,6 +138,10 @@ export async function createCar(req: Request, res: Response): Promise<void> {
       model: body.model as string,
       year: body.year as number,
       price: body.price as number,
+      market_price:
+        body.market_price != null && body.market_price !== ""
+          ? Number(body.market_price as number)
+          : null,
       fuel_type: body.fuel_type as string,
       transmission: body.transmission as string,
       km_driven: (body.km_driven as number) ?? 0,
@@ -163,6 +172,7 @@ export async function updateCar(req: Request, res: Response): Promise<void> {
       "model",
       "year",
       "price",
+      "market_price",
       "fuel_type",
       "transmission",
       "km_driven",

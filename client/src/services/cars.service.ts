@@ -10,6 +10,7 @@ export type CarsQuery = {
   fuel_type?: string;
   transmission?: string;
   location?: string;
+  year?: number;
   featured?: boolean;
   sort?: "price" | "year";
   order?: "asc" | "desc";

@@ -24,6 +24,7 @@ const emptyForm = {
   model: "",
   year: String(new Date().getFullYear()),
   price: "",
+  market_price: "",
   fuel_type: "Petrol",
   transmission: "Automatic",
   km_driven: "0",
@@ -154,6 +155,7 @@ const AdminCars = () => {
         model: form.model,
         year: Number(form.year),
         price: Number(form.price),
+        market_price: form.market_price.trim() ? Number(form.market_price) : null,
         fuel_type: form.fuel_type,
         transmission: form.transmission,
         km_driven: Number(form.km_driven),
@@ -193,6 +195,7 @@ const AdminCars = () => {
       model: c.model,
       year: String(c.year),
       price: String(c.price),
+      market_price: c.market_price != null ? String(c.market_price) : "",
       fuel_type: c.fuel_type,
       transmission: c.transmission,
       km_driven: String(c.km_driven),
@@ -210,6 +213,7 @@ const AdminCars = () => {
         model: car.model,
         year: String(car.year),
         price: String(car.price),
+        market_price: car.market_price != null ? String(car.market_price) : "",
         fuel_type: car.fuel_type,
         transmission: car.transmission,
         km_driven: String(car.km_driven),
@@ -349,13 +353,24 @@ const AdminCars = () => {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="price">Price (₹)</Label>
+                  <Label htmlFor="price">Fixed price (₹)</Label>
                   <Input
                     id="price"
                     type="number"
                     className="mt-1.5"
                     value={form.price}
                     onChange={(e) => setForm((f) => ({ ...f, price: e.target.value }))}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="market_price">Market price (₹, optional)</Label>
+                  <Input
+                    id="market_price"
+                    type="number"
+                    className="mt-1.5"
+                    placeholder="Higher MRP for comparison"
+                    value={form.market_price}
+                    onChange={(e) => setForm((f) => ({ ...f, market_price: e.target.value }))}
                   />
                 </div>
                 <div>

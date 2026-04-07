@@ -14,6 +14,7 @@ export class Car extends Model<InferAttributes<Car>, InferCreationAttributes<Car
   declare model: string;
   declare year: number;
   declare price: number;
+  declare market_price: CreationOptional<number | null>;
   declare fuel_type: string;
   declare transmission: string;
   declare km_driven: number;
@@ -37,6 +38,7 @@ Car.init(
     model: { type: DataTypes.STRING(120), allowNull: false },
     year: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: false },
     price: { type: DataTypes.BIGINT.UNSIGNED, allowNull: false },
+    market_price: { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
     fuel_type: { type: DataTypes.STRING(60), allowNull: false },
     transmission: { type: DataTypes.STRING(60), allowNull: false },
     km_driven: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false, defaultValue: 0 },

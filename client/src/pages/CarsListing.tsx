@@ -20,6 +20,7 @@ const CarsListing = () => {
   const [fuel, setFuel] = useState(() => searchParams.get("fuel_type") ?? "");
   const [trans, setTrans] = useState(() => searchParams.get("transmission") ?? "");
   const [loc, setLoc] = useState(() => searchParams.get("location") ?? "");
+  const [year, setYear] = useState(() => searchParams.get("year") ?? "");
   const [sort, setSort] = useState(() => searchParams.get("sort") ?? "latest");
   const DEFAULT_MAX_PRICE = 20_000_000;
   const [maxPrice, setMaxPrice] = useState(() => {
@@ -42,6 +43,7 @@ const CarsListing = () => {
       sortField = "year";
       order = "desc";
     }
+    const yearNum = year ? Number(year) : undefined;
     return {
       page,
       limit: 12,
@@ -49,11 +51,12 @@ const CarsListing = () => {
       fuel_type: fuel || undefined,
       transmission: trans || undefined,
       location: loc || undefined,
+      year: yearNum != null && !Number.isNaN(yearNum) ? yearNum : undefined,
       maxPrice,
       sort: sortField,
       order,
     };
-  }, [page, brand, fuel, trans, loc, maxPrice, sort]);
+  }, [page, brand, fuel, trans, loc, year, maxPrice, sort]);
 
   const { data, isLoading, isFetching } = useQuery({
     queryKey: ["cars", queryParams],
@@ -67,17 +70,19 @@ const CarsListing = () => {
     if (fuel) next.set("fuel_type", fuel);
     if (trans) next.set("transmission", trans);
     if (loc) next.set("location", loc);
+    if (year) next.set("year", year);
     if (maxPrice !== DEFAULT_MAX_PRICE) next.set("maxPrice", String(maxPrice));
     if (page > 1) next.set("page", String(page));
     if (sort !== "latest") next.set("sort", sort);
     setSearchParams(next, { replace: true });
-  }, [brand, fuel, trans, loc, maxPrice, page, sort, setSearchParams]);
+  }, [brand, fuel, trans, loc, year, maxPrice, page, sort, setSearchParams]);
 
   const clearFilters = () => {
     setBrand("");
     setFuel("");
     setTrans("");
     setLoc("");
+    setYear("");
     setMaxPrice(DEFAULT_MAX_PRICE);
     setPage(1);
   };
@@ -92,6 +97,7 @@ const CarsListing = () => {
       fuel={fuel}
       trans={trans}
       loc={loc}
+      year={year}
       maxPrice={maxPrice}
       onBrand={(v) => {
         setBrand(v);
@@ -107,6 +113,10 @@ const CarsListing = () => {
       }}
       onLoc={(v) => {
         setLoc(v);
+        setPage(1);
+      }}
+      onYear={(v) => {
+        setYear(v);
         setPage(1);
       }}
       onMaxPrice={(v) => {

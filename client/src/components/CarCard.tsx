@@ -1,5 +1,6 @@
 import type { CarView } from "@/types/car";
 import { formatPrice } from "@/utils/formatPrice";
+import { formatKmDriven } from "@/utils/formatKm";
 import { Fuel, Gauge, MapPin, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -38,7 +39,19 @@ const CarCard = ({ car, large = false }: { car: CarView; large?: boolean }) => (
           <h3 className="line-clamp-2 text-left text-sm font-semibold leading-snug text-foreground sm:text-base">
             {car.name}
           </h3>
-          <p className="text-base font-bold tabular-nums text-secondary sm:text-lg">{formatPrice(car.price)}</p>
+          <div className="space-y-0.5">
+            {car.marketPrice != null && car.marketPrice > car.price && (
+              <p className="text-sm tabular-nums text-muted-foreground line-through">
+                MRP {formatPrice(car.marketPrice)}
+              </p>
+            )}
+            <p className="text-base font-bold tabular-nums text-secondary sm:text-lg">
+              {formatPrice(car.price)}
+              {car.marketPrice != null && car.marketPrice > car.price && (
+                <span className="ml-1.5 text-xs font-semibold text-foreground">Fixed price</span>
+              )}
+            </p>
+          </div>
 
           <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 pt-1">
             <div className="flex min-w-0 items-start gap-1 text-[11px] leading-tight text-muted-foreground sm:text-xs">
@@ -47,7 +60,7 @@ const CarCard = ({ car, large = false }: { car: CarView; large?: boolean }) => (
             </div>
             <div className="flex min-w-0 items-start gap-1 text-[11px] leading-tight text-muted-foreground sm:text-xs">
               <Gauge className="mt-0.5 h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
-              <span className="tabular-nums">{(car.kmDriven / 1000).toFixed(0)}k km</span>
+              <span className="tabular-nums">{formatKmDriven(car.kmDriven)}</span>
             </div>
             <div className="flex min-w-0 items-start gap-1 text-[11px] leading-tight text-muted-foreground sm:text-xs">
               <Settings className="mt-0.5 h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />

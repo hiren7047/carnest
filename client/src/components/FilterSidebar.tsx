@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { brands, fuelTypes, transmissions, locations } from "@/utils/constants";
+import { brands, fuelTypes, transmissions, locations, modelYears } from "@/utils/constants";
 import { ChevronDown } from "lucide-react";
 
 export type FilterState = {
@@ -15,11 +15,13 @@ type Props = {
   fuel: string;
   trans: string;
   loc: string;
+  year: string;
   maxPrice: number;
   onBrand: (v: string) => void;
   onFuel: (v: string) => void;
   onTrans: (v: string) => void;
   onLoc: (v: string) => void;
+  onYear: (v: string) => void;
   onMaxPrice: (v: number) => void;
   onClear: () => void;
   formatPrice: (n: number) => string;
@@ -61,11 +63,13 @@ export function FilterSidebar({
   fuel,
   trans,
   loc,
+  year,
   maxPrice,
   onBrand,
   onFuel,
   onTrans,
   onLoc,
+  onYear,
   onMaxPrice,
   onClear,
   formatPrice,
@@ -75,6 +79,7 @@ export function FilterSidebar({
       <FilterSelect label="Brand" value={brand} onChange={onBrand} options={brands} />
       <FilterSelect label="Fuel Type" value={fuel} onChange={onFuel} options={fuelTypes} />
       <FilterSelect label="Transmission" value={trans} onChange={onTrans} options={transmissions} />
+      <FilterSelect label="Years" value={year} onChange={onYear} options={modelYears} />
       <FilterSelect label="Location" value={loc} onChange={onLoc} options={locations} />
       <div>
         <label className="text-xs font-medium text-muted-foreground mb-1 block">

@@ -18,6 +18,15 @@ import {
 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { formatPrice } from "@/utils/formatPrice";
+import { formatKmDriven } from "@/utils/formatKm";
+import {
+  Carousel,
+  CarouselContent,
+  CarouselItem,
+  CarouselNext,
+  CarouselPrevious,
+  type CarouselApi,
+} from "@/components/ui/carousel";
 import { fetchCarById } from "@/services/cars.service";
 import { mapApiCarToView } from "@/types/car";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -44,6 +53,8 @@ const CarDetail = () => {
   const [bookingDate, setBookingDate] = useState<Date | undefined>(undefined);
   const [bookingLoading, setBookingLoading] = useState(false);
   const [saved, setSaved] = useState(false);
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
 
   const { data, isLoading, error } = useQuery({
     queryKey: ["car", id],
@@ -71,6 +82,15 @@ const CarDetail = () => {
     const imgs = car.images?.length ? car.images : [car.image];
     return imgs;
   }, [car]);
+
+  useEffect(() => {
+    if (!carouselApi || !lightboxOpen) return;
+    const onSelect = () => setActiveImg(carouselApi.selectedScrollSnap());
+    carouselApi.on("select", onSelect);
+    return () => {
+      carouselApi.off("select", onSelect);
+    };
+  }, [carouselApi, lightboxOpen]);
 
   const handleBooking = async () => {
     if (!user) {
@@ -114,7 +134,11 @@ const CarDetail = () => {
 
   const waLink = car
     ? whatsAppChatUrl(
-        `Hi Carnest, I'm interested in ${car.name} (₹${car.price.toLocaleString("en-IN")}) — Listing ID ${car.id}`
+        `Hi Carnest, I'm interested in ${car.name} (₹${car.price.toLocaleString("en-IN")}${
+          car.marketPrice != null && car.marketPrice > car.price
+            ? `, below market ~₹${car.marketPrice.toLocaleString("en-IN")}`
+            : ""
+        }) — Listing ID ${car.id}`
       )
     : "#";
 
@@ -147,7 +171,7 @@ const CarDetail = () => {
   const specs = [
     { icon: Fuel, label: "Fuel", value: car.fuelType },
     { icon: Settings, label: "Transmission", value: car.transmission },
-    { icon: Gauge, label: "KM Driven", value: `${(car.kmDriven / 1000).toFixed(0)}k km` },
+    { icon: Gauge, label: "KM Driven", value: formatKmDriven(car.kmDriven) },
     { icon: Calendar, label: "Year", value: car.year.toString() },
     { icon: MapPin, label: "Location", value: car.location },
   ];
@@ -171,21 +195,29 @@ const CarDetail = () => {
           <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
             <div className="lg:col-span-2 space-y-4">
               <div className="overflow-hidden rounded-xl border border-border/40 bg-muted/60">
-                <div className="flex min-h-[min(55vh,520px)] w-full items-center justify-center p-2 sm:p-4 md:min-h-[min(60vh,560px)]">
+                <button
+                  type="button"
+                  onClick={() => setLightboxOpen(true)}
+                  className="group flex min-h-[min(55vh,520px)] w-full cursor-zoom-in items-center justify-center p-2 sm:p-4 md:min-h-[min(60vh,560px)]"
+                  aria-label="View photos full screen"
+                >
                   <img
                     src={images[activeImg] ?? car.image}
                     alt={car.name}
                     loading="lazy"
-                    className="max-h-[min(55vh,520px)] w-full object-contain object-center md:max-h-[min(60vh,560px)]"
+                    className="max-h-[min(55vh,520px)] w-full object-contain object-center transition-transform duration-300 group-hover:scale-[1.01] md:max-h-[min(60vh,560px)]"
                   />
-                </div>
+                </button>
               </div>
               <div className="flex flex-wrap gap-2">
                 {images.map((img, i) => (
                   <button
                     key={i}
                     type="button"
-                    onClick={() => setActiveImg(i)}
+                    onClick={() => {
+                      setActiveImg(i);
+                      carouselApi?.scrollTo(i);
+                    }}
                     className={`flex h-[4.5rem] w-[5.5rem] shrink-0 items-center justify-center overflow-hidden rounded-lg border-2 bg-muted/50 transition-colors ${
                       i === activeImg ? "border-secondary ring-2 ring-secondary/30" : "border-border/60"
                     }`}
@@ -196,8 +228,10 @@ const CarDetail = () => {
               </div>
 
               <div className="bg-card rounded-xl p-6 border border-border/50 mt-6">
-                <h3 className="font-heading font-semibold text-lg mb-3">Description</h3>
-                <p className="text-sm text-muted-foreground leading-relaxed">{car.description}</p>
+                <h3 className="font-heading font-semibold text-lg mb-4">Description</h3>
+                <div className="prose prose-sm max-w-none text-foreground/90 dark:prose-invert prose-p:leading-relaxed prose-p:mb-3 last:prose-p:mb-0">
+                  <p className="whitespace-pre-wrap text-[15px] leading-relaxed md:text-base">{car.description}</p>
+                </div>
               </div>
             </div>
 
@@ -219,9 +253,19 @@ const CarDetail = () => {
                   </Button>
                 </div>
                 <h1 className="text-2xl font-heading font-bold text-foreground mb-1">{car.name}</h1>
-                <p className="text-3xl font-heading font-bold text-secondary mb-6">
-                  {formatPrice(car.price)}
-                </p>
+                <div className="mb-6 space-y-1">
+                  {car.marketPrice != null && car.marketPrice > car.price && (
+                    <p className="text-lg font-medium tabular-nums text-muted-foreground line-through">
+                      Market price {formatPrice(car.marketPrice)}
+                    </p>
+                  )}
+                  <p className="text-3xl font-heading font-bold text-secondary">
+                    {formatPrice(car.price)}
+                    {car.marketPrice != null && car.marketPrice > car.price && (
+                      <span className="ml-2 block text-sm font-semibold text-foreground">Fixed price</span>
+                    )}
+                  </p>
+                </div>
 
                 <div className="grid grid-cols-2 gap-3 mb-6">
                   {specs.map(({ icon: Icon, label, value }) => (
@@ -269,6 +313,43 @@ const CarDetail = () => {
           )}
         </div>
       </div>
+
+      <Dialog open={lightboxOpen} onOpenChange={setLightboxOpen}>
+        <DialogContent
+          className="fixed left-0 top-0 z-[60] flex h-[100dvh] max-h-[100dvh] w-full max-w-none translate-x-0 translate-y-0 flex-col gap-0 rounded-none border-0 bg-zinc-950 p-0 text-white shadow-none data-[state=open]:zoom-in-100 data-[state=closed]:zoom-out-100 [&>button]:right-4 [&>button]:top-4 [&>button]:text-white"
+          onOpenAutoFocus={(e) => e.preventDefault()}
+        >
+          <DialogHeader className="sr-only">
+            <DialogTitle>Photo gallery</DialogTitle>
+          </DialogHeader>
+          <div className="relative flex min-h-0 flex-1 flex-col items-center justify-center px-2 pb-10 pt-14 sm:px-6">
+            <Carousel
+              opts={{ loop: true, startIndex: activeImg }}
+              setApi={setCarouselApi}
+              className="w-full max-w-5xl"
+            >
+              <CarouselContent className="-ml-2">
+                {images.map((src, i) => (
+                  <CarouselItem key={i} className="basis-full pl-2">
+                    <div className="flex h-[min(70vh,520px)] w-full items-center justify-center sm:h-[min(75vh,600px)]">
+                      <img
+                        src={src}
+                        alt={`${car.name} ${i + 1}`}
+                        className="max-h-full max-w-full object-contain"
+                      />
+                    </div>
+                  </CarouselItem>
+                ))}
+              </CarouselContent>
+              <CarouselPrevious className="left-2 border-white/40 bg-white/10 text-white hover:bg-white/20 disabled:opacity-0 sm:left-4" />
+              <CarouselNext className="right-2 border-white/40 bg-white/10 text-white hover:bg-white/20 disabled:opacity-0 sm:right-4" />
+            </Carousel>
+            <p className="mt-4 text-center text-sm text-white/70">
+              {activeImg + 1} / {images.length} — swipe or use arrows
+            </p>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={bookingOpen} onOpenChange={setBookingOpen}>
         <DialogContent>
