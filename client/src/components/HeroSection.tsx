@@ -12,12 +12,12 @@ const HeroSection = () => {
   const { hero } = content;
   const [brand, setBrand] = useState("");
   const [fuel, setFuel] = useState("");
-  const [location, setLocation] = useState("");
+  const [year, setYear] = useState("");
 
   const searchParams = new URLSearchParams();
   if (brand) searchParams.set("brand", brand);
   if (fuel) searchParams.set("fuel_type", fuel);
-  if (location) searchParams.set("location", location);
+  if (year) searchParams.set("year", year);
   const qs = searchParams.toString();
   const carsHref = qs ? `/cars?${qs}` : "/cars";
 
