@@ -2,7 +2,8 @@ import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 
-const OFFICE_ADDRESS = "Bandra Kurla Complex, Mumbai 400051, Maharashtra, India";
+const OFFICE_ADDRESS = "Shiv Ashirwad Compound, Between Polaris and Param Hospital, BRTS Canal Road, Varachha, Surat.";
+const OFFICE_MAPS_LINK = "https://maps.app.goo.gl/P1Tg8eKr2X2Y6My5A";
 
 const About = () => (
   <PageShell
@@ -24,7 +25,14 @@ const About = () => (
       </section>
       <section className="space-y-3">
         <h2 className="text-xl font-heading font-semibold text-foreground">Visit</h2>
-        <p className="text-muted-foreground">{OFFICE_ADDRESS}</p>
+        <a
+          href={OFFICE_MAPS_LINK}
+          target="_blank"
+          rel="noreferrer"
+          className="text-muted-foreground hover:text-secondary hover:underline"
+        >
+          {OFFICE_ADDRESS}
+        </a>
         <p className="text-sm text-muted-foreground">Mon–Sat, 10:00–19:00 IST (by appointment on Sundays).</p>
       </section>
       <Button variant="cta" asChild>

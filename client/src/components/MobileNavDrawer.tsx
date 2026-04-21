@@ -1,9 +1,10 @@
 import { Link } from "react-router-dom";
-import { Car, X } from "lucide-react";
+import { X } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { primaryNavItems } from "@/config/nav";
 import { useAuth } from "@/context/AuthContext";
+import { BrandLogo } from "@/components/BrandLogo";
 
 type MobileNavDrawerProps = {
   open: boolean;
@@ -23,12 +24,9 @@ export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
       >
         <SheetTitle className="sr-only">Main navigation</SheetTitle>
         <div className="flex items-center justify-between border-b border-zinc-800 px-4 py-4">
-          <Link to="/" className="flex items-center gap-2" onClick={close}>
-            <Car className="h-7 w-7 text-secondary" />
-            <span className="text-xl font-heading font-bold italic text-secondary">
-              Car<span className="text-zinc-100 not-italic font-bold">nest</span>
-            </span>
-          </Link>
+          <div onClick={close}>
+            <BrandLogo imageClassName="h-9" />
+          </div>
           <SheetClose asChild>
             <button
               type="button"

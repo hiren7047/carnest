@@ -12,7 +12,8 @@ import { whatsAppChatUrl, PRESET_HERO_ENQUIRY } from "@/utils/whatsapp";
 import { getPublicPhoneDisplay, getPublicPhoneTelHref } from "@/utils/phone";
 
 const OFFICE_EMAIL = "hello@carnest.in";
-const OFFICE_ADDRESS = "Bandra Kurla Complex, Mumbai 400051, Maharashtra, India";
+const OFFICE_ADDRESS = "Shiv Ashirwad Compound, Between Polaris and Param Hospital, BRTS Canal Road, Varachha, Surat.";
+const OFFICE_MAPS_LINK = "https://maps.app.goo.gl/P1Tg8eKr2X2Y6My5A";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -55,7 +56,14 @@ const Contact = () => {
                 <MapPin className="h-5 w-5 text-secondary shrink-0 mt-0.5" />
                 <div>
                   <p className="font-medium text-foreground">Office</p>
-                  <p className="text-sm text-muted-foreground">{OFFICE_ADDRESS}</p>
+                  <a
+                    href={OFFICE_MAPS_LINK}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-sm text-secondary hover:underline"
+                  >
+                    {OFFICE_ADDRESS}
+                  </a>
                 </div>
               </div>
               <div className="flex gap-3">

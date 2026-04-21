@@ -36,7 +36,7 @@ export const defaultSiteContent = (): SiteContent => ({
     ],
   },
   contact: {
-    whatsappNumber: "919876543210",
+    whatsappNumber: "919737875735",
     supportEmail: "",
   },
 });

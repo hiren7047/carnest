@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Car, ChevronDown, Menu, Moon, Sun } from "lucide-react";
+import { ChevronDown, Menu, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAuth } from "@/context/AuthContext";
@@ -12,6 +12,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { BrandLogo } from "@/components/BrandLogo";
 
 const pinnedPaths = new Set(["/", "/cars", "/sell", "/contact"]);
 const exploreItems = primaryNavItems.filter((p) => !pinnedPaths.has(p.to));
@@ -25,12 +26,7 @@ const Navbar = () => {
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
         <div className="container flex items-center justify-between h-16">
-          <Link to="/" className="flex items-center gap-2">
-            <Car className="h-7 w-7 text-secondary" />
-            <span className="text-xl font-heading font-bold text-primary">
-              Car<span className="text-secondary">nest</span>
-            </span>
-          </Link>
+          <BrandLogo imageClassName="h-9" />
 
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             <Link

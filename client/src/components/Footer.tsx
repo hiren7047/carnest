@@ -1,10 +1,11 @@
 import { Link } from "react-router-dom";
-import { Car, Facebook, Instagram, Mail, Twitter, Youtube } from "lucide-react";
+import { Facebook, Instagram, Mail, Twitter, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "./ScrollReveal";
 import { brands } from "@/utils/constants";
 import { useState } from "react";
 import { toast } from "sonner";
+import { BrandLogo } from "./BrandLogo";
 
 const quickLinks: { label: string; to: string }[] = [
   { label: "Browse Cars", to: "/cars" },
@@ -34,12 +35,7 @@ const Footer = () => {
         <ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             <div>
-              <Link to="/" className="flex items-center gap-2 mb-4">
-                <Car className="h-7 w-7 text-secondary" />
-                <span className="text-xl font-heading font-bold">
-                  Car<span className="text-secondary">nest</span>
-                </span>
-              </Link>
+              <BrandLogo className="mb-4" imageClassName="h-10" />
               <p className="text-sm text-primary-foreground/60 leading-relaxed">
                 India's most trusted premium car marketplace. Curated luxury vehicles with complete transparency.
               </p>
