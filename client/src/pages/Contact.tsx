@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Mail, MapPin, MessageCircle, Phone } from "lucide-react";
+import { Instagram, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { submitContact } from "@/services/contact.service";
 import { toast } from "sonner";
 import { whatsAppChatUrl, PRESET_HERO_ENQUIRY } from "@/utils/whatsapp";
@@ -14,6 +14,7 @@ import { getPublicPhoneDisplay, getPublicPhoneTelHref } from "@/utils/phone";
 const OFFICE_EMAIL = "hello@carnest.in";
 const OFFICE_ADDRESS = "Shiv Ashirwad Compound, Between Polaris and Param Hospital, BRTS Canal Road, Varachha, Surat.";
 const OFFICE_MAPS_LINK = "https://maps.app.goo.gl/P1Tg8eKr2X2Y6My5A";
+const INSTAGRAM_URL = "https://instagram.com/carnest_surat";
 
 const Contact = () => {
   const [name, setName] = useState("");
@@ -95,6 +96,15 @@ const Contact = () => {
                     className="text-sm text-whatsapp hover:underline"
                   >
                     Chat with Carnest
+                  </a>
+                </div>
+              </div>
+              <div className="flex gap-3">
+                <Instagram className="h-5 w-5 text-secondary shrink-0" />
+                <div>
+                  <p className="font-medium text-foreground">Instagram</p>
+                  <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="text-sm text-secondary hover:underline">
+                    @carnest_surat
                   </a>
                 </div>
               </div>

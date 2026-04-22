@@ -24,6 +24,10 @@ import siteRoutes from "./routes/site.routes.js";
 const app = express();
 const uploadDir = process.env.UPLOAD_DIR ?? "uploads";
 ensureUploadDir();
+const allowedOrigins = (process.env.CLIENT_URLS ?? process.env.CLIENT_URL ?? "http://localhost:8080")
+  .split(",")
+  .map((o) => o.trim())
+  .filter(Boolean);
 
 app.use(
   helmet({
@@ -32,7 +36,14 @@ app.use(
 );
 app.use(
   cors({
-    origin: process.env.CLIENT_URL ?? "http://localhost:8080",
+    origin: (origin, callback) => {
+      // Allow server-to-server calls and same-origin requests without Origin header.
+      if (!origin) {
+        callback(null, true);
+        return;
+      }
+      callback(null, allowedOrigins.includes(origin));
+    },
     credentials: true,
   })
 );

@@ -1,5 +1,6 @@
 import type { Request, Response } from "express";
 import { SellRequest } from "../models/index.js";
+import { diskUploadUrlFromParts } from "../lib/diskUploadUrls.js";
 
 export async function createSellRequest(req: Request, res: Response): Promise<void> {
   try {
@@ -9,11 +10,10 @@ export async function createSellRequest(req: Request, res: Response): Promise<vo
       car_details: string;
     };
     const files = req.files as Express.Multer.File[] | undefined;
-    const publicBase = process.env.PUBLIC_BASE_URL ?? `http://localhost:${process.env.PORT ?? 4000}`;
     const urls: string[] = [];
     if (files?.length) {
       for (const f of files) {
-        urls.push(`${publicBase}/uploads/${f.filename}`);
+        urls.push(diskUploadUrlFromParts(f.filename));
       }
     }
     const row = await SellRequest.create({

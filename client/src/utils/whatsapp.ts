@@ -1,5 +1,5 @@
 /** Digits only, country code included (e.g. India 91XXXXXXXXXX). */
-const DEFAULT_NUMBER = "919737875735";
+const DEFAULT_NUMBER = "919714335588";
 
 export function getWhatsAppNumber(): string {
   const n = import.meta.env.VITE_WHATSAPP_NUMBER?.replace(/\D/g, "");

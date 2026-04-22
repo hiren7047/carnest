@@ -36,7 +36,7 @@ export function defaultSiteContent(): SiteContent {
       ],
     },
     contact: {
-      whatsappNumber: "919737875735",
+      whatsappNumber: "919714335588",
       supportEmail: "",
     },
   };
