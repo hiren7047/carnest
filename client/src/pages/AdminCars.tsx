@@ -30,9 +30,104 @@ const emptyForm = {
   km_driven: "0",
   location: "Mumbai",
   description: "",
+  variant_name: "",
+  registration_year: "",
+  registration_month: "",
+  owner_count: "",
+  color: "",
+  body_type: "",
+  rto_city: "",
+
+  engine_cc: "",
+  power_bhp: "",
+  torque_nm: "",
+  top_speed_kmph: "",
+  accel_0_100_sec: "",
+  drivetrain: "",
+  seating_capacity: "",
+  boot_space_l: "",
+
+  battery_kwh: "",
+  range_km: "",
+  charging_time_ac: "",
+  charging_time_dc: "",
+
+  insurance_valid_till: "",
+  warranty_info: "",
+  service_history: "",
+
+  sunroof: false,
+  alloy_wheels: false,
+  led_headlamps: false,
+  fog_lamps: false,
+  rear_camera: false,
+  parking_sensors: false,
+
+  ventilated_seats: false,
+  leather_seats: false,
+  ambient_lighting: false,
+  digital_cluster: false,
+
+  airbags_count: "",
+  abs: false,
+  esc: false,
+  tpms: false,
+  adas: false,
+
+  android_auto: false,
+  apple_carplay: false,
+  wireless_charging: false,
+  cruise_control: false,
+
+  emi_note: "",
   imageUrls: [] as string[],
   is_featured: false,
 };
+
+function toOptionalNumber(raw: string): number | null {
+  const t = raw.trim();
+  if (!t) return null;
+  const n = Number(t);
+  return Number.isFinite(n) ? n : null;
+}
+
+function toOptionalInt(raw: string): number | null {
+  const n = toOptionalNumber(raw);
+  if (n == null) return null;
+  return Math.trunc(n);
+}
+
+function toOptionalString(raw: string): string | null {
+  const t = raw.trim();
+  return t ? t : null;
+}
+
+function BoolField({
+  label,
+  checked,
+  onChange,
+  hint,
+}: {
+  label: string;
+  checked: boolean;
+  onChange: (next: boolean) => void;
+  hint?: string;
+}) {
+  return (
+    <label className="flex cursor-pointer items-start gap-2 rounded-lg border border-border/60 bg-muted/10 px-3 py-2.5 transition-colors hover:bg-muted/25">
+      <input
+        type="checkbox"
+        checked={checked}
+        onChange={(e) => onChange(e.target.checked)}
+        className="mt-0.5 h-4 w-4 rounded border-border"
+      />
+      <div className="min-w-0">
+        <span className="text-sm font-medium text-foreground">{label}</span>
+        {hint ? <p className="mt-0.5 text-xs text-muted-foreground">{hint}</p> : null}
+      </div>
+    </label>
+  );
+}
 
 function PhotoThumb({
   url,
@@ -163,6 +258,57 @@ const AdminCars = () => {
         description: form.description,
         images: form.imageUrls,
         is_featured: form.is_featured,
+
+        variant_name: toOptionalString(form.variant_name),
+        registration_year: toOptionalInt(form.registration_year),
+        registration_month: toOptionalInt(form.registration_month),
+        owner_count: toOptionalInt(form.owner_count),
+        color: toOptionalString(form.color),
+        body_type: toOptionalString(form.body_type),
+        rto_city: toOptionalString(form.rto_city),
+
+        engine_cc: toOptionalInt(form.engine_cc),
+        power_bhp: toOptionalNumber(form.power_bhp),
+        torque_nm: toOptionalNumber(form.torque_nm),
+        top_speed_kmph: toOptionalInt(form.top_speed_kmph),
+        accel_0_100_sec: toOptionalNumber(form.accel_0_100_sec),
+        drivetrain: toOptionalString(form.drivetrain),
+        seating_capacity: toOptionalInt(form.seating_capacity),
+        boot_space_l: toOptionalInt(form.boot_space_l),
+
+        battery_kwh: toOptionalNumber(form.battery_kwh),
+        range_km: toOptionalInt(form.range_km),
+        charging_time_ac: toOptionalString(form.charging_time_ac),
+        charging_time_dc: toOptionalString(form.charging_time_dc),
+
+        insurance_valid_till: toOptionalString(form.insurance_valid_till),
+        warranty_info: toOptionalString(form.warranty_info),
+        service_history: toOptionalString(form.service_history),
+
+        sunroof: form.sunroof,
+        alloy_wheels: form.alloy_wheels,
+        led_headlamps: form.led_headlamps,
+        fog_lamps: form.fog_lamps,
+        rear_camera: form.rear_camera,
+        parking_sensors: form.parking_sensors,
+
+        ventilated_seats: form.ventilated_seats,
+        leather_seats: form.leather_seats,
+        ambient_lighting: form.ambient_lighting,
+        digital_cluster: form.digital_cluster,
+
+        airbags_count: toOptionalInt(form.airbags_count),
+        abs: form.abs,
+        esc: form.esc,
+        tpms: form.tpms,
+        adas: form.adas,
+
+        android_auto: form.android_auto,
+        apple_carplay: form.apple_carplay,
+        wireless_charging: form.wireless_charging,
+        cruise_control: form.cruise_control,
+
+        emi_note: toOptionalString(form.emi_note),
       };
       if (editingId) {
         return updateCar(editingId, payload);
@@ -201,6 +347,56 @@ const AdminCars = () => {
       km_driven: String(c.km_driven),
       location: c.location,
       description: c.description,
+      variant_name: c.variant_name ?? "",
+      registration_year: c.registration_year != null ? String(c.registration_year) : "",
+      registration_month: c.registration_month != null ? String(c.registration_month) : "",
+      owner_count: c.owner_count != null ? String(c.owner_count) : "",
+      color: c.color ?? "",
+      body_type: c.body_type ?? "",
+      rto_city: c.rto_city ?? "",
+
+      engine_cc: c.engine_cc != null ? String(c.engine_cc) : "",
+      power_bhp: c.power_bhp != null ? String(c.power_bhp) : "",
+      torque_nm: c.torque_nm != null ? String(c.torque_nm) : "",
+      top_speed_kmph: c.top_speed_kmph != null ? String(c.top_speed_kmph) : "",
+      accel_0_100_sec: c.accel_0_100_sec != null ? String(c.accel_0_100_sec) : "",
+      drivetrain: c.drivetrain ?? "",
+      seating_capacity: c.seating_capacity != null ? String(c.seating_capacity) : "",
+      boot_space_l: c.boot_space_l != null ? String(c.boot_space_l) : "",
+
+      battery_kwh: c.battery_kwh != null ? String(c.battery_kwh) : "",
+      range_km: c.range_km != null ? String(c.range_km) : "",
+      charging_time_ac: c.charging_time_ac ?? "",
+      charging_time_dc: c.charging_time_dc ?? "",
+
+      insurance_valid_till: c.insurance_valid_till ?? "",
+      warranty_info: c.warranty_info ?? "",
+      service_history: c.service_history ?? "",
+
+      sunroof: Boolean(c.sunroof),
+      alloy_wheels: Boolean(c.alloy_wheels),
+      led_headlamps: Boolean(c.led_headlamps),
+      fog_lamps: Boolean(c.fog_lamps),
+      rear_camera: Boolean(c.rear_camera),
+      parking_sensors: Boolean(c.parking_sensors),
+
+      ventilated_seats: Boolean(c.ventilated_seats),
+      leather_seats: Boolean(c.leather_seats),
+      ambient_lighting: Boolean(c.ambient_lighting),
+      digital_cluster: Boolean(c.digital_cluster),
+
+      airbags_count: c.airbags_count != null ? String(c.airbags_count) : "",
+      abs: Boolean(c.abs),
+      esc: Boolean(c.esc),
+      tpms: Boolean(c.tpms),
+      adas: Boolean(c.adas),
+
+      android_auto: Boolean(c.android_auto),
+      apple_carplay: Boolean(c.apple_carplay),
+      wireless_charging: Boolean(c.wireless_charging),
+      cruise_control: Boolean(c.cruise_control),
+
+      emi_note: c.emi_note ?? "",
       imageUrls: normalizeCarImageUrls(c.images),
       is_featured: c.is_featured,
     });
@@ -219,6 +415,56 @@ const AdminCars = () => {
         km_driven: String(car.km_driven),
         location: car.location,
         description: car.description,
+        variant_name: car.variant_name ?? "",
+        registration_year: car.registration_year != null ? String(car.registration_year) : "",
+        registration_month: car.registration_month != null ? String(car.registration_month) : "",
+        owner_count: car.owner_count != null ? String(car.owner_count) : "",
+        color: car.color ?? "",
+        body_type: car.body_type ?? "",
+        rto_city: car.rto_city ?? "",
+
+        engine_cc: car.engine_cc != null ? String(car.engine_cc) : "",
+        power_bhp: car.power_bhp != null ? String(car.power_bhp) : "",
+        torque_nm: car.torque_nm != null ? String(car.torque_nm) : "",
+        top_speed_kmph: car.top_speed_kmph != null ? String(car.top_speed_kmph) : "",
+        accel_0_100_sec: car.accel_0_100_sec != null ? String(car.accel_0_100_sec) : "",
+        drivetrain: car.drivetrain ?? "",
+        seating_capacity: car.seating_capacity != null ? String(car.seating_capacity) : "",
+        boot_space_l: car.boot_space_l != null ? String(car.boot_space_l) : "",
+
+        battery_kwh: car.battery_kwh != null ? String(car.battery_kwh) : "",
+        range_km: car.range_km != null ? String(car.range_km) : "",
+        charging_time_ac: car.charging_time_ac ?? "",
+        charging_time_dc: car.charging_time_dc ?? "",
+
+        insurance_valid_till: car.insurance_valid_till ?? "",
+        warranty_info: car.warranty_info ?? "",
+        service_history: car.service_history ?? "",
+
+        sunroof: Boolean(car.sunroof),
+        alloy_wheels: Boolean(car.alloy_wheels),
+        led_headlamps: Boolean(car.led_headlamps),
+        fog_lamps: Boolean(car.fog_lamps),
+        rear_camera: Boolean(car.rear_camera),
+        parking_sensors: Boolean(car.parking_sensors),
+
+        ventilated_seats: Boolean(car.ventilated_seats),
+        leather_seats: Boolean(car.leather_seats),
+        ambient_lighting: Boolean(car.ambient_lighting),
+        digital_cluster: Boolean(car.digital_cluster),
+
+        airbags_count: car.airbags_count != null ? String(car.airbags_count) : "",
+        abs: Boolean(car.abs),
+        esc: Boolean(car.esc),
+        tpms: Boolean(car.tpms),
+        adas: Boolean(car.adas),
+
+        android_auto: Boolean(car.android_auto),
+        apple_carplay: Boolean(car.apple_carplay),
+        wireless_charging: Boolean(car.wireless_charging),
+        cruise_control: Boolean(car.cruise_control),
+
+        emi_note: car.emi_note ?? "",
         imageUrls: urls,
         is_featured: car.is_featured,
       });
@@ -439,6 +685,321 @@ const AdminCars = () => {
                   </div>
                 </div>
               </label>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Registration & Ownership</h3>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div className="sm:col-span-2 lg:col-span-3">
+                <Label htmlFor="variant">Variant / Trim</Label>
+                <Input
+                  id="variant"
+                  className="mt-1.5"
+                  value={form.variant_name}
+                  onChange={(e) => setForm((f) => ({ ...f, variant_name: e.target.value }))}
+                  placeholder="e.g. GTX+ / SX(O) / M Sport"
+                />
+              </div>
+              <div>
+                <Label htmlFor="regy">Registration year</Label>
+                <Input
+                  id="regy"
+                  className="mt-1.5"
+                  value={form.registration_year}
+                  onChange={(e) => setForm((f) => ({ ...f, registration_year: e.target.value }))}
+                  placeholder="e.g. 2023"
+                />
+              </div>
+              <div>
+                <Label htmlFor="regm">Registration month</Label>
+                <Input
+                  id="regm"
+                  className="mt-1.5"
+                  value={form.registration_month}
+                  onChange={(e) => setForm((f) => ({ ...f, registration_month: e.target.value }))}
+                  placeholder="1-12"
+                />
+              </div>
+              <div>
+                <Label htmlFor="owners">Owner count</Label>
+                <Input
+                  id="owners"
+                  className="mt-1.5"
+                  value={form.owner_count}
+                  onChange={(e) => setForm((f) => ({ ...f, owner_count: e.target.value }))}
+                  placeholder="e.g. 1"
+                />
+              </div>
+              <div>
+                <Label htmlFor="color">Color</Label>
+                <Input
+                  id="color"
+                  className="mt-1.5"
+                  value={form.color}
+                  onChange={(e) => setForm((f) => ({ ...f, color: e.target.value }))}
+                  placeholder="e.g. Mojave Silver"
+                />
+              </div>
+              <div>
+                <Label htmlFor="body">Body type</Label>
+                <Input
+                  id="body"
+                  className="mt-1.5"
+                  value={form.body_type}
+                  onChange={(e) => setForm((f) => ({ ...f, body_type: e.target.value }))}
+                  placeholder="SUV / Sedan / Hatchback"
+                />
+              </div>
+              <div>
+                <Label htmlFor="rto">RTO city</Label>
+                <Input
+                  id="rto"
+                  className="mt-1.5"
+                  value={form.rto_city}
+                  onChange={(e) => setForm((f) => ({ ...f, rto_city: e.target.value }))}
+                  placeholder="e.g. Surat"
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Specs & Performance</h3>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <Label htmlFor="cc">Engine (cc)</Label>
+                <Input
+                  id="cc"
+                  className="mt-1.5"
+                  value={form.engine_cc}
+                  onChange={(e) => setForm((f) => ({ ...f, engine_cc: e.target.value }))}
+                  placeholder="e.g. 1993"
+                />
+              </div>
+              <div>
+                <Label htmlFor="bhp">Power (bhp)</Label>
+                <Input
+                  id="bhp"
+                  className="mt-1.5"
+                  value={form.power_bhp}
+                  onChange={(e) => setForm((f) => ({ ...f, power_bhp: e.target.value }))}
+                  placeholder="e.g. 197"
+                />
+              </div>
+              <div>
+                <Label htmlFor="torque">Torque (Nm)</Label>
+                <Input
+                  id="torque"
+                  className="mt-1.5"
+                  value={form.torque_nm}
+                  onChange={(e) => setForm((f) => ({ ...f, torque_nm: e.target.value }))}
+                  placeholder="e.g. 440"
+                />
+              </div>
+              <div>
+                <Label htmlFor="topspeed">Top speed (km/h)</Label>
+                <Input
+                  id="topspeed"
+                  className="mt-1.5"
+                  value={form.top_speed_kmph}
+                  onChange={(e) => setForm((f) => ({ ...f, top_speed_kmph: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="accel">0-100 (sec)</Label>
+                <Input
+                  id="accel"
+                  className="mt-1.5"
+                  value={form.accel_0_100_sec}
+                  onChange={(e) => setForm((f) => ({ ...f, accel_0_100_sec: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="drive">Drivetrain</Label>
+                <Input
+                  id="drive"
+                  className="mt-1.5"
+                  value={form.drivetrain}
+                  onChange={(e) => setForm((f) => ({ ...f, drivetrain: e.target.value }))}
+                  placeholder="FWD / RWD / AWD"
+                />
+              </div>
+              <div>
+                <Label htmlFor="seat">Seating capacity</Label>
+                <Input
+                  id="seat"
+                  className="mt-1.5"
+                  value={form.seating_capacity}
+                  onChange={(e) => setForm((f) => ({ ...f, seating_capacity: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="boot">Boot space (L)</Label>
+                <Input
+                  id="boot"
+                  className="mt-1.5"
+                  value={form.boot_space_l}
+                  onChange={(e) => setForm((f) => ({ ...f, boot_space_l: e.target.value }))}
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">EV details (optional)</h3>
+            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              <div>
+                <Label htmlFor="batt">Battery (kWh)</Label>
+                <Input
+                  id="batt"
+                  className="mt-1.5"
+                  value={form.battery_kwh}
+                  onChange={(e) => setForm((f) => ({ ...f, battery_kwh: e.target.value }))}
+                />
+              </div>
+              <div>
+                <Label htmlFor="range">Range (km)</Label>
+                <Input
+                  id="range"
+                  className="mt-1.5"
+                  value={form.range_km}
+                  onChange={(e) => setForm((f) => ({ ...f, range_km: e.target.value }))}
+                />
+              </div>
+              <div className="sm:col-span-2 lg:col-span-3">
+                <Label htmlFor="ac">Charging time (AC)</Label>
+                <Input
+                  id="ac"
+                  className="mt-1.5"
+                  value={form.charging_time_ac}
+                  onChange={(e) => setForm((f) => ({ ...f, charging_time_ac: e.target.value }))}
+                  placeholder="e.g. 0-100% in ~6h (7.4kW)"
+                />
+              </div>
+              <div className="sm:col-span-2 lg:col-span-3">
+                <Label htmlFor="dc">Charging time (DC)</Label>
+                <Input
+                  id="dc"
+                  className="mt-1.5"
+                  value={form.charging_time_dc}
+                  onChange={(e) => setForm((f) => ({ ...f, charging_time_dc: e.target.value }))}
+                  placeholder="e.g. 10-80% in ~35m"
+                />
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Features</h3>
+            <div className="grid gap-6 lg:grid-cols-2">
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Exterior</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <BoolField label="Sunroof" checked={form.sunroof} onChange={(v) => setForm((f) => ({ ...f, sunroof: v }))} />
+                  <BoolField label="Alloy wheels" checked={form.alloy_wheels} onChange={(v) => setForm((f) => ({ ...f, alloy_wheels: v }))} />
+                  <BoolField label="LED headlamps" checked={form.led_headlamps} onChange={(v) => setForm((f) => ({ ...f, led_headlamps: v }))} />
+                  <BoolField label="Fog lamps" checked={form.fog_lamps} onChange={(v) => setForm((f) => ({ ...f, fog_lamps: v }))} />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Interior</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <BoolField label="Ventilated seats" checked={form.ventilated_seats} onChange={(v) => setForm((f) => ({ ...f, ventilated_seats: v }))} />
+                  <BoolField label="Leather seats" checked={form.leather_seats} onChange={(v) => setForm((f) => ({ ...f, leather_seats: v }))} />
+                  <BoolField label="Ambient lighting" checked={form.ambient_lighting} onChange={(v) => setForm((f) => ({ ...f, ambient_lighting: v }))} />
+                  <BoolField label="Digital cluster" checked={form.digital_cluster} onChange={(v) => setForm((f) => ({ ...f, digital_cluster: v }))} />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Safety</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <div className="sm:col-span-2">
+                    <Label htmlFor="airbags">Airbags (count)</Label>
+                    <Input
+                      id="airbags"
+                      className="mt-1.5"
+                      value={form.airbags_count}
+                      onChange={(e) => setForm((f) => ({ ...f, airbags_count: e.target.value }))}
+                      placeholder="e.g. 6"
+                    />
+                  </div>
+                  <BoolField label="ABS" checked={form.abs} onChange={(v) => setForm((f) => ({ ...f, abs: v }))} />
+                  <BoolField label="ESC" checked={form.esc} onChange={(v) => setForm((f) => ({ ...f, esc: v }))} />
+                  <BoolField label="TPMS" checked={form.tpms} onChange={(v) => setForm((f) => ({ ...f, tpms: v }))} />
+                  <BoolField label="ADAS" checked={form.adas} onChange={(v) => setForm((f) => ({ ...f, adas: v }))} hint="If car has driver assistance features" />
+                  <BoolField label="Rear camera" checked={form.rear_camera} onChange={(v) => setForm((f) => ({ ...f, rear_camera: v }))} />
+                  <BoolField label="Parking sensors" checked={form.parking_sensors} onChange={(v) => setForm((f) => ({ ...f, parking_sensors: v }))} />
+                </div>
+              </div>
+
+              <div className="space-y-3">
+                <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Convenience & Infotainment</p>
+                <div className="grid gap-2 sm:grid-cols-2">
+                  <BoolField label="Android Auto" checked={form.android_auto} onChange={(v) => setForm((f) => ({ ...f, android_auto: v }))} />
+                  <BoolField label="Apple CarPlay" checked={form.apple_carplay} onChange={(v) => setForm((f) => ({ ...f, apple_carplay: v }))} />
+                  <BoolField label="Wireless charging" checked={form.wireless_charging} onChange={(v) => setForm((f) => ({ ...f, wireless_charging: v }))} />
+                  <BoolField label="Cruise control" checked={form.cruise_control} onChange={(v) => setForm((f) => ({ ...f, cruise_control: v }))} />
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <Separator />
+
+          <div className="space-y-4">
+            <h3 className="text-sm font-semibold uppercase tracking-wide text-muted-foreground">Warranty / Service / Finance</h3>
+            <div className="grid gap-4 lg:grid-cols-2">
+              <div>
+                <Label htmlFor="ins">Insurance valid till</Label>
+                <Input
+                  id="ins"
+                  className="mt-1.5"
+                  value={form.insurance_valid_till}
+                  onChange={(e) => setForm((f) => ({ ...f, insurance_valid_till: e.target.value }))}
+                  placeholder="e.g. Feb 2027"
+                />
+              </div>
+              <div>
+                <Label htmlFor="warr">Warranty info</Label>
+                <Input
+                  id="warr"
+                  className="mt-1.5"
+                  value={form.warranty_info}
+                  onChange={(e) => setForm((f) => ({ ...f, warranty_info: e.target.value }))}
+                  placeholder="e.g. Extended warranty till 2028"
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <Label htmlFor="svc">Service history</Label>
+                <Input
+                  id="svc"
+                  className="mt-1.5"
+                  value={form.service_history}
+                  onChange={(e) => setForm((f) => ({ ...f, service_history: e.target.value }))}
+                  placeholder="e.g. Company service record available"
+                />
+              </div>
+              <div className="lg:col-span-2">
+                <Label htmlFor="emi">EMI note (optional)</Label>
+                <Input
+                  id="emi"
+                  className="mt-1.5"
+                  value={form.emi_note}
+                  onChange={(e) => setForm((f) => ({ ...f, emi_note: e.target.value }))}
+                  placeholder="Shown near EMI widget"
+                />
+              </div>
             </div>
           </div>
 

@@ -14,6 +14,57 @@ export const createCarSchema = Joi.object({
   images: Joi.array().items(Joi.string().min(1)).min(1).required(),
   description: Joi.string().allow("").max(20000),
   is_featured: Joi.boolean().default(false),
+
+  variant_name: Joi.string().max(180).allow(null, "").optional(),
+  registration_year: Joi.number().integer().min(1980).max(2035).allow(null).optional(),
+  registration_month: Joi.number().integer().min(1).max(12).allow(null).optional(),
+  owner_count: Joi.number().integer().min(1).max(10).allow(null).optional(),
+  color: Joi.string().max(80).allow(null, "").optional(),
+  body_type: Joi.string().max(80).allow(null, "").optional(),
+  rto_city: Joi.string().max(120).allow(null, "").optional(),
+
+  engine_cc: Joi.number().integer().min(0).max(10000).allow(null).optional(),
+  power_bhp: Joi.number().min(0).max(2000).allow(null).optional(),
+  torque_nm: Joi.number().min(0).max(5000).allow(null).optional(),
+  top_speed_kmph: Joi.number().integer().min(0).max(450).allow(null).optional(),
+  accel_0_100_sec: Joi.number().min(0).max(60).allow(null).optional(),
+  drivetrain: Joi.string().max(40).allow(null, "").optional(),
+  seating_capacity: Joi.number().integer().min(1).max(12).allow(null).optional(),
+  boot_space_l: Joi.number().integer().min(0).max(2000).allow(null).optional(),
+
+  battery_kwh: Joi.number().min(0).max(500).allow(null).optional(),
+  range_km: Joi.number().integer().min(0).max(2000).allow(null).optional(),
+  charging_time_ac: Joi.string().max(120).allow(null, "").optional(),
+  charging_time_dc: Joi.string().max(120).allow(null, "").optional(),
+
+  insurance_valid_till: Joi.string().max(40).allow(null, "").optional(),
+  warranty_info: Joi.string().max(500).allow(null, "").optional(),
+  service_history: Joi.string().max(500).allow(null, "").optional(),
+
+  sunroof: Joi.boolean().default(false),
+  alloy_wheels: Joi.boolean().default(false),
+  led_headlamps: Joi.boolean().default(false),
+  fog_lamps: Joi.boolean().default(false),
+  rear_camera: Joi.boolean().default(false),
+  parking_sensors: Joi.boolean().default(false),
+
+  ventilated_seats: Joi.boolean().default(false),
+  leather_seats: Joi.boolean().default(false),
+  ambient_lighting: Joi.boolean().default(false),
+  digital_cluster: Joi.boolean().default(false),
+
+  airbags_count: Joi.number().integer().min(0).max(20).allow(null).optional(),
+  abs: Joi.boolean().default(false),
+  esc: Joi.boolean().default(false),
+  tpms: Joi.boolean().default(false),
+  adas: Joi.boolean().default(false),
+
+  android_auto: Joi.boolean().default(false),
+  apple_carplay: Joi.boolean().default(false),
+  wireless_charging: Joi.boolean().default(false),
+  cruise_control: Joi.boolean().default(false),
+
+  emi_note: Joi.string().max(300).allow(null, "").optional(),
 });
 
 export const updateCarSchema = Joi.object({
@@ -30,4 +81,55 @@ export const updateCarSchema = Joi.object({
   images: Joi.array().items(Joi.string().min(1)).min(1),
   description: Joi.string().allow("").max(20000),
   is_featured: Joi.boolean(),
+
+  variant_name: Joi.string().max(180).allow(null, ""),
+  registration_year: Joi.number().integer().min(1980).max(2035).allow(null),
+  registration_month: Joi.number().integer().min(1).max(12).allow(null),
+  owner_count: Joi.number().integer().min(1).max(10).allow(null),
+  color: Joi.string().max(80).allow(null, ""),
+  body_type: Joi.string().max(80).allow(null, ""),
+  rto_city: Joi.string().max(120).allow(null, ""),
+
+  engine_cc: Joi.number().integer().min(0).max(10000).allow(null),
+  power_bhp: Joi.number().min(0).max(2000).allow(null),
+  torque_nm: Joi.number().min(0).max(5000).allow(null),
+  top_speed_kmph: Joi.number().integer().min(0).max(450).allow(null),
+  accel_0_100_sec: Joi.number().min(0).max(60).allow(null),
+  drivetrain: Joi.string().max(40).allow(null, ""),
+  seating_capacity: Joi.number().integer().min(1).max(12).allow(null),
+  boot_space_l: Joi.number().integer().min(0).max(2000).allow(null),
+
+  battery_kwh: Joi.number().min(0).max(500).allow(null),
+  range_km: Joi.number().integer().min(0).max(2000).allow(null),
+  charging_time_ac: Joi.string().max(120).allow(null, ""),
+  charging_time_dc: Joi.string().max(120).allow(null, ""),
+
+  insurance_valid_till: Joi.string().max(40).allow(null, ""),
+  warranty_info: Joi.string().max(500).allow(null, ""),
+  service_history: Joi.string().max(500).allow(null, ""),
+
+  sunroof: Joi.boolean(),
+  alloy_wheels: Joi.boolean(),
+  led_headlamps: Joi.boolean(),
+  fog_lamps: Joi.boolean(),
+  rear_camera: Joi.boolean(),
+  parking_sensors: Joi.boolean(),
+
+  ventilated_seats: Joi.boolean(),
+  leather_seats: Joi.boolean(),
+  ambient_lighting: Joi.boolean(),
+  digital_cluster: Joi.boolean(),
+
+  airbags_count: Joi.number().integer().min(0).max(20).allow(null),
+  abs: Joi.boolean(),
+  esc: Joi.boolean(),
+  tpms: Joi.boolean(),
+  adas: Joi.boolean(),
+
+  android_auto: Joi.boolean(),
+  apple_carplay: Joi.boolean(),
+  wireless_charging: Joi.boolean(),
+  cruise_control: Joi.boolean(),
+
+  emi_note: Joi.string().max(300).allow(null, ""),
 });

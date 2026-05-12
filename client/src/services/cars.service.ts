@@ -26,12 +26,27 @@ export async function fetchCarById(id: string | number): Promise<CarDetailRespon
   return data;
 }
 
-export async function createCar(body: Record<string, unknown>): Promise<ApiCar> {
+export type CreateCarPayload = Partial<Omit<ApiCar, "id" | "image" | "createdAt" | "updatedAt">> & {
+  title: string;
+  brand: string;
+  model: string;
+  year: number;
+  price: number;
+  fuel_type: string;
+  transmission: string;
+  km_driven: number;
+  location: string;
+  images: string[];
+};
+
+export type UpdateCarPayload = Partial<Omit<ApiCar, "id" | "image" | "createdAt" | "updatedAt">>;
+
+export async function createCar(body: CreateCarPayload): Promise<ApiCar> {
   const { data } = await api.post<ApiCar>("/api/cars", body);
   return data;
 }
 
-export async function updateCar(id: number, body: Record<string, unknown>): Promise<ApiCar> {
+export async function updateCar(id: number, body: UpdateCarPayload): Promise<ApiCar> {
   const { data } = await api.put<ApiCar>(`/api/cars/${id}`, body);
   return data;
 }

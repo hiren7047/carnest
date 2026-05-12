@@ -43,24 +43,26 @@ const AdminSettings = () => {
     <div className="space-y-6 max-w-lg">
       <div>
         <h1 className="text-2xl font-heading font-bold">Settings</h1>
-        <p className="text-muted-foreground text-sm mt-1">Contact details used across the site (WhatsApp, email)</p>
+        <p className="text-muted-foreground text-sm mt-1">
+          Contact details used across the site (same number for WhatsApp and click-to-call, plus support email)
+        </p>
       </div>
 
       <Card>
         <CardHeader>
           <CardTitle>Contact</CardTitle>
-          <CardDescription>Shown in the floating chat button and can be used in the footer later</CardDescription>
+          <CardDescription>This number powers WhatsApp and call actions site-wide</CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div>
-            <Label>WhatsApp number (digits, country code, no +)</Label>
+            <Label>Business number (digits, country code, no +)</Label>
             <Input
               className="mt-1"
               value={contact.whatsappNumber}
               onChange={(e) =>
                 setContact((c) => ({ ...c, whatsappNumber: e.target.value.replace(/\D/g, "") }))
               }
-              placeholder="919876543210"
+              placeholder="919714335588"
             />
           </div>
           <div>

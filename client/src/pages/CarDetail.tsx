@@ -43,10 +43,14 @@ import { createBooking } from "@/services/bookings.service";
 import { saveCar, removeCar, fetchWishlist } from "@/services/wishlist.service";
 import { toast } from "sonner";
 import { whatsAppChatUrl } from "@/utils/whatsapp";
+import { digitsToTelHref, resolvePublicContactDigits } from "@/utils/phone";
+import { useSiteContent } from "@/hooks/useSitePublic";
 
 const CarDetail = () => {
   const { id } = useParams();
   const { user } = useAuth();
+  const siteContent = useSiteContent();
+  const contactDigits = resolvePublicContactDigits(siteContent.contact.whatsappNumber);
   const queryClient = useQueryClient();
   const [activeImg, setActiveImg] = useState(0);
   const [bookingOpen, setBookingOpen] = useState(false);
@@ -138,7 +142,8 @@ const CarDetail = () => {
           car.marketPrice != null && car.marketPrice > car.price
             ? `, below market ~₹${car.marketPrice.toLocaleString("en-IN")}`
             : ""
-        }) — Listing ID ${car.id}`
+        }) — Listing ID ${car.id}`,
+        contactDigits
       )
     : "#";
 
@@ -288,7 +293,7 @@ const CarDetail = () => {
                     Book Test Drive
                   </Button>
                   <Button variant="outline" className="w-full gap-2" asChild>
-                    <a href="tel:+919876543210">
+                    <a href={digitsToTelHref(contactDigits)}>
                       <Phone className="h-4 w-4" />
                       Contact Dealer
                     </a>

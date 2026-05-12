@@ -181,7 +181,7 @@ const SellYourCar = () => {
               </h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <Field label="Full Name" icon={User} name="name" placeholder="John Doe" />
-                <Field label="Phone" icon={Phone} name="phone" type="tel" placeholder="+91 98765 43210" />
+                <Field label="Phone" icon={Phone} name="phone" type="tel" placeholder="+91 9XXXX XXXXX" />
                 <Field label="Email" icon={Mail} name="email" type="email" placeholder="john@example.com" />
                 <Field label="City" icon={MapPin} name="city" placeholder="Mumbai" />
               </div>

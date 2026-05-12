@@ -9,7 +9,8 @@ import { Instagram, Mail, MapPin, MessageCircle, Phone } from "lucide-react";
 import { submitContact } from "@/services/contact.service";
 import { toast } from "sonner";
 import { whatsAppChatUrl, PRESET_HERO_ENQUIRY } from "@/utils/whatsapp";
-import { getPublicPhoneDisplay, getPublicPhoneTelHref } from "@/utils/phone";
+import { digitsToTelHref, formatPhoneDisplay, resolvePublicContactDigits } from "@/utils/phone";
+import { useSiteContent } from "@/hooks/useSitePublic";
 
 const OFFICE_EMAIL = "hello@carnest.in";
 const OFFICE_ADDRESS = "Shiv Ashirwad Compound, Between Polaris and Param Hospital, BRTS Canal Road, Varachha, Surat.";
@@ -17,6 +18,8 @@ const OFFICE_MAPS_LINK = "https://maps.app.goo.gl/P1Tg8eKr2X2Y6My5A";
 const INSTAGRAM_URL = "https://instagram.com/carnest_surat";
 
 const Contact = () => {
+  const siteContent = useSiteContent();
+  const contactDigits = resolvePublicContactDigits(siteContent.contact.whatsappNumber);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -71,8 +74,8 @@ const Contact = () => {
                 <Phone className="h-5 w-5 text-secondary shrink-0" />
                 <div>
                   <p className="font-medium text-foreground">Phone</p>
-                  <a href={getPublicPhoneTelHref()} className="text-sm text-secondary hover:underline">
-                    {getPublicPhoneDisplay()}
+                  <a href={digitsToTelHref(contactDigits)} className="text-sm text-secondary hover:underline">
+                    {formatPhoneDisplay(contactDigits)}
                   </a>
                 </div>
               </div>
@@ -90,7 +93,7 @@ const Contact = () => {
                 <div>
                   <p className="font-medium text-foreground">WhatsApp</p>
                   <a
-                    href={whatsAppChatUrl(PRESET_HERO_ENQUIRY)}
+                    href={whatsAppChatUrl(PRESET_HERO_ENQUIRY, contactDigits)}
                     target="_blank"
                     rel="noreferrer"
                     className="text-sm text-whatsapp hover:underline"

@@ -18,6 +18,7 @@ export type SeedCar = {
   model: string;
   year: number;
   price: number;
+  market_price?: number | null;
   fuel_type: string;
   transmission: string;
   km_driven: number;
@@ -25,6 +26,57 @@ export type SeedCar = {
   images: string[];
   description: string;
   is_featured: boolean;
+
+  variant_name?: string | null;
+  registration_year?: number | null;
+  registration_month?: number | null;
+  owner_count?: number | null;
+  color?: string | null;
+  body_type?: string | null;
+  rto_city?: string | null;
+
+  engine_cc?: number | null;
+  power_bhp?: number | null;
+  torque_nm?: number | null;
+  top_speed_kmph?: number | null;
+  accel_0_100_sec?: number | null;
+  drivetrain?: string | null;
+  seating_capacity?: number | null;
+  boot_space_l?: number | null;
+
+  battery_kwh?: number | null;
+  range_km?: number | null;
+  charging_time_ac?: string | null;
+  charging_time_dc?: string | null;
+
+  insurance_valid_till?: string | null;
+  warranty_info?: string | null;
+  service_history?: string | null;
+
+  sunroof?: boolean;
+  alloy_wheels?: boolean;
+  led_headlamps?: boolean;
+  fog_lamps?: boolean;
+  rear_camera?: boolean;
+  parking_sensors?: boolean;
+
+  ventilated_seats?: boolean;
+  leather_seats?: boolean;
+  ambient_lighting?: boolean;
+  digital_cluster?: boolean;
+
+  airbags_count?: number | null;
+  abs?: boolean;
+  esc?: boolean;
+  tpms?: boolean;
+  adas?: boolean;
+
+  android_auto?: boolean;
+  apple_carplay?: boolean;
+  wireless_charging?: boolean;
+  cruise_control?: boolean;
+
+  emi_note?: string | null;
 };
 
 function specToSeed(s: CatalogCarSpec, images: string[]): SeedCar {

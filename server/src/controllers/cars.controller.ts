@@ -81,6 +81,57 @@ function serializeCar(c: Car) {
     image: imgs[0] ?? null,
     description: c.description,
     is_featured: c.is_featured,
+
+    variant_name: c.variant_name ?? null,
+    registration_year: c.registration_year ?? null,
+    registration_month: c.registration_month ?? null,
+    owner_count: c.owner_count ?? null,
+    color: c.color ?? null,
+    body_type: c.body_type ?? null,
+    rto_city: c.rto_city ?? null,
+
+    engine_cc: c.engine_cc ?? null,
+    power_bhp: c.power_bhp != null ? Number(c.power_bhp) : null,
+    torque_nm: c.torque_nm != null ? Number(c.torque_nm) : null,
+    top_speed_kmph: c.top_speed_kmph ?? null,
+    accel_0_100_sec: c.accel_0_100_sec != null ? Number(c.accel_0_100_sec) : null,
+    drivetrain: c.drivetrain ?? null,
+    seating_capacity: c.seating_capacity ?? null,
+    boot_space_l: c.boot_space_l ?? null,
+
+    battery_kwh: c.battery_kwh != null ? Number(c.battery_kwh) : null,
+    range_km: c.range_km ?? null,
+    charging_time_ac: c.charging_time_ac ?? null,
+    charging_time_dc: c.charging_time_dc ?? null,
+
+    insurance_valid_till: c.insurance_valid_till ?? null,
+    warranty_info: c.warranty_info ?? null,
+    service_history: c.service_history ?? null,
+
+    sunroof: Boolean(c.sunroof),
+    alloy_wheels: Boolean(c.alloy_wheels),
+    led_headlamps: Boolean(c.led_headlamps),
+    fog_lamps: Boolean(c.fog_lamps),
+    rear_camera: Boolean(c.rear_camera),
+    parking_sensors: Boolean(c.parking_sensors),
+
+    ventilated_seats: Boolean(c.ventilated_seats),
+    leather_seats: Boolean(c.leather_seats),
+    ambient_lighting: Boolean(c.ambient_lighting),
+    digital_cluster: Boolean(c.digital_cluster),
+
+    airbags_count: c.airbags_count ?? null,
+    abs: Boolean(c.abs),
+    esc: Boolean(c.esc),
+    tpms: Boolean(c.tpms),
+    adas: Boolean(c.adas),
+
+    android_auto: Boolean(c.android_auto),
+    apple_carplay: Boolean(c.apple_carplay),
+    wireless_charging: Boolean(c.wireless_charging),
+    cruise_control: Boolean(c.cruise_control),
+
+    emi_note: c.emi_note ?? null,
     createdAt: c.createdAt,
     updatedAt: c.updatedAt,
   };
@@ -149,6 +200,57 @@ export async function createCar(req: Request, res: Response): Promise<void> {
       images: normalizeCarImagesFromDb(body.images),
       description: (body.description as string) ?? "",
       is_featured: Boolean(body.is_featured),
+
+      variant_name: (body.variant_name as string) ?? null,
+      registration_year: (body.registration_year as number) ?? null,
+      registration_month: (body.registration_month as number) ?? null,
+      owner_count: (body.owner_count as number) ?? null,
+      color: (body.color as string) ?? null,
+      body_type: (body.body_type as string) ?? null,
+      rto_city: (body.rto_city as string) ?? null,
+
+      engine_cc: (body.engine_cc as number) ?? null,
+      power_bhp: (body.power_bhp as number) ?? null,
+      torque_nm: (body.torque_nm as number) ?? null,
+      top_speed_kmph: (body.top_speed_kmph as number) ?? null,
+      accel_0_100_sec: (body.accel_0_100_sec as number) ?? null,
+      drivetrain: (body.drivetrain as string) ?? null,
+      seating_capacity: (body.seating_capacity as number) ?? null,
+      boot_space_l: (body.boot_space_l as number) ?? null,
+
+      battery_kwh: (body.battery_kwh as number) ?? null,
+      range_km: (body.range_km as number) ?? null,
+      charging_time_ac: (body.charging_time_ac as string) ?? null,
+      charging_time_dc: (body.charging_time_dc as string) ?? null,
+
+      insurance_valid_till: (body.insurance_valid_till as string) ?? null,
+      warranty_info: (body.warranty_info as string) ?? null,
+      service_history: (body.service_history as string) ?? null,
+
+      sunroof: Boolean(body.sunroof),
+      alloy_wheels: Boolean(body.alloy_wheels),
+      led_headlamps: Boolean(body.led_headlamps),
+      fog_lamps: Boolean(body.fog_lamps),
+      rear_camera: Boolean(body.rear_camera),
+      parking_sensors: Boolean(body.parking_sensors),
+
+      ventilated_seats: Boolean(body.ventilated_seats),
+      leather_seats: Boolean(body.leather_seats),
+      ambient_lighting: Boolean(body.ambient_lighting),
+      digital_cluster: Boolean(body.digital_cluster),
+
+      airbags_count: (body.airbags_count as number) ?? null,
+      abs: Boolean(body.abs),
+      esc: Boolean(body.esc),
+      tpms: Boolean(body.tpms),
+      adas: Boolean(body.adas),
+
+      android_auto: Boolean(body.android_auto),
+      apple_carplay: Boolean(body.apple_carplay),
+      wireless_charging: Boolean(body.wireless_charging),
+      cruise_control: Boolean(body.cruise_control),
+
+      emi_note: (body.emi_note as string) ?? null,
     });
     res.status(201).json(serializeCar(car));
   } catch (e) {
@@ -180,6 +282,57 @@ export async function updateCar(req: Request, res: Response): Promise<void> {
       "images",
       "description",
       "is_featured",
+
+      "variant_name",
+      "registration_year",
+      "registration_month",
+      "owner_count",
+      "color",
+      "body_type",
+      "rto_city",
+
+      "engine_cc",
+      "power_bhp",
+      "torque_nm",
+      "top_speed_kmph",
+      "accel_0_100_sec",
+      "drivetrain",
+      "seating_capacity",
+      "boot_space_l",
+
+      "battery_kwh",
+      "range_km",
+      "charging_time_ac",
+      "charging_time_dc",
+
+      "insurance_valid_till",
+      "warranty_info",
+      "service_history",
+
+      "sunroof",
+      "alloy_wheels",
+      "led_headlamps",
+      "fog_lamps",
+      "rear_camera",
+      "parking_sensors",
+
+      "ventilated_seats",
+      "leather_seats",
+      "ambient_lighting",
+      "digital_cluster",
+
+      "airbags_count",
+      "abs",
+      "esc",
+      "tpms",
+      "adas",
+
+      "android_auto",
+      "apple_carplay",
+      "wireless_charging",
+      "cruise_control",
+
+      "emi_note",
     ] as const;
     for (const key of allowed) {
       if (body[key] !== undefined) {
