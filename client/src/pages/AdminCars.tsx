@@ -84,6 +84,15 @@ const emptyForm = {
   is_featured: false,
 };
 
+function mergeApiCar(base: ApiCar, patch: Partial<ApiCar>): ApiCar {
+  return {
+    ...base,
+    ...patch,
+    images: Array.isArray(patch.images) ? patch.images : base.images,
+    image: patch.image !== undefined ? patch.image : base.image,
+  };
+}
+
 function carToForm(c: ApiCar) {
   return {
     title: c.title,
@@ -273,6 +282,7 @@ const AdminCars = () => {
   const qc = useQueryClient();
   const [form, setForm] = useState(emptyForm);
   const [editingId, setEditingId] = useState<number | null>(null);
+  const [editingBaseCar, setEditingBaseCar] = useState<ApiCar | null>(null);
   const [uploading, setUploading] = useState(false);
   const [loadingEdit, setLoadingEdit] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
@@ -391,13 +401,16 @@ const AdminCars = () => {
 
       // Keep form filled after update so re-clicking Edit shows the saved state.
       if (editingId) {
-        setForm(carToForm(saved));
+        const merged = editingBaseCar ? mergeApiCar(editingBaseCar, saved) : saved;
+        setEditingBaseCar(merged);
+        setForm(carToForm(merged));
         setEditingId(saved.id);
         return;
       }
 
       setForm(emptyForm);
       setEditingId(null);
+      setEditingBaseCar(null);
     },
     onError: (e: Error) => toast.error(e.message),
   });
@@ -413,18 +426,23 @@ const AdminCars = () => {
 
   const startEdit = async (c: ApiCar) => {
     setEditingId(c.id);
+    setEditingBaseCar(c);
     setLoadingEdit(true);
     setForm(carToForm(c));
     try {
       const { car } = await fetchCarById(c.id);
       const urls = normalizeCarImageUrls(car.images);
-      setForm({ ...carToForm(car), imageUrls: urls });
+      const merged = mergeApiCar(c, car);
+      merged.images = urls;
+      setEditingBaseCar(merged);
+      setForm({ ...carToForm(merged), imageUrls: urls });
       if (urls.length === 0) {
         toast.warning("No images saved — add photos and click Update.");
       }
     } catch {
       setEditingId(null);
       setForm(emptyForm);
+      setEditingBaseCar(null);
     } finally {
       setLoadingEdit(false);
     }

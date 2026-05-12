@@ -16,7 +16,20 @@ declare global {
   }
 }
 
-const JWT_SECRET = process.env.JWT_SECRET ?? "dev-secret-change-me";
+function resolveJwtSecret(): string {
+  const raw = process.env.JWT_SECRET;
+  const trimmed = raw?.trim();
+  if (trimmed) return trimmed;
+
+  // In production we should never run with an empty secret.
+  if (process.env.NODE_ENV === "production") {
+    throw new Error("Missing JWT_SECRET (must be a non-empty string)");
+  }
+
+  return "dev-secret-change-me";
+}
+
+const JWT_SECRET = resolveJwtSecret();
 
 export function authRequired(req: Request, res: Response, next: NextFunction): void {
   const header = req.headers.authorization;
