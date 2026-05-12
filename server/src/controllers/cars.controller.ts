@@ -262,88 +262,88 @@ export async function createCar(req: Request, res: Response): Promise<void> {
 export async function updateCar(req: Request, res: Response): Promise<void> {
   try {
     const id = Number(req.params.id);
+    if (Number.isNaN(id)) {
+      res.status(400).json({ message: "Invalid id" });
+      return;
+    }
     const car = await Car.findByPk(id);
     if (!car) {
       res.status(404).json({ message: "Car not found" });
       return;
     }
     const body = req.body as Record<string, unknown>;
-    const allowed = [
-      "title",
-      "brand",
-      "model",
-      "year",
-      "price",
-      "market_price",
-      "fuel_type",
-      "transmission",
-      "km_driven",
-      "location",
-      "images",
-      "description",
-      "is_featured",
-
-      "variant_name",
-      "registration_year",
-      "registration_month",
-      "owner_count",
-      "color",
-      "body_type",
-      "rto_city",
-
-      "engine_cc",
-      "power_bhp",
-      "torque_nm",
-      "top_speed_kmph",
-      "accel_0_100_sec",
-      "drivetrain",
-      "seating_capacity",
-      "boot_space_l",
-
-      "battery_kwh",
-      "range_km",
-      "charging_time_ac",
-      "charging_time_dc",
-
-      "insurance_valid_till",
-      "warranty_info",
-      "service_history",
-
-      "sunroof",
-      "alloy_wheels",
-      "led_headlamps",
-      "fog_lamps",
-      "rear_camera",
-      "parking_sensors",
-
-      "ventilated_seats",
-      "leather_seats",
-      "ambient_lighting",
-      "digital_cluster",
-
-      "airbags_count",
-      "abs",
-      "esc",
-      "tpms",
-      "adas",
-
-      "android_auto",
-      "apple_carplay",
-      "wireless_charging",
-      "cruise_control",
-
-      "emi_note",
-    ] as const;
-    for (const key of allowed) {
-      if (body[key] !== undefined) {
-        if (key === "images") {
-          (car as unknown as Record<string, unknown>).images = normalizeCarImagesFromDb(body.images);
-        } else {
-          (car as unknown as Record<string, unknown>)[key] = body[key];
-        }
-      }
+    // NOTE: req.body is already validated + stripped by Joi in routes (updateCarSchema).
+    // We still normalize a few fields to keep DB consistent.
+    if (body.title !== undefined) car.title = body.title as string;
+    if (body.brand !== undefined) car.brand = body.brand as string;
+    if (body.model !== undefined) car.model = body.model as string;
+    if (body.year !== undefined) car.year = body.year as number;
+    if (body.price !== undefined) car.price = body.price as number;
+    if (body.market_price !== undefined) {
+      car.market_price =
+        body.market_price == null || body.market_price === "" ? null : Number(body.market_price as number);
     }
+    if (body.fuel_type !== undefined) car.fuel_type = body.fuel_type as string;
+    if (body.transmission !== undefined) car.transmission = body.transmission as string;
+    if (body.km_driven !== undefined) car.km_driven = body.km_driven as number;
+    if (body.location !== undefined) car.location = body.location as string;
+    if (body.images !== undefined) car.images = normalizeCarImagesFromDb(body.images);
+    if (body.description !== undefined) car.description = (body.description as string) ?? "";
+    if (body.is_featured !== undefined) car.is_featured = Boolean(body.is_featured);
+
+    if (body.variant_name !== undefined) car.variant_name = (body.variant_name as string) ?? null;
+    if (body.registration_year !== undefined) car.registration_year = (body.registration_year as number) ?? null;
+    if (body.registration_month !== undefined) car.registration_month = (body.registration_month as number) ?? null;
+    if (body.owner_count !== undefined) car.owner_count = (body.owner_count as number) ?? null;
+    if (body.color !== undefined) car.color = (body.color as string) ?? null;
+    if (body.body_type !== undefined) car.body_type = (body.body_type as string) ?? null;
+    if (body.rto_city !== undefined) car.rto_city = (body.rto_city as string) ?? null;
+
+    if (body.engine_cc !== undefined) car.engine_cc = (body.engine_cc as number) ?? null;
+    if (body.power_bhp !== undefined) car.power_bhp = (body.power_bhp as number) ?? null;
+    if (body.torque_nm !== undefined) car.torque_nm = (body.torque_nm as number) ?? null;
+    if (body.top_speed_kmph !== undefined) car.top_speed_kmph = (body.top_speed_kmph as number) ?? null;
+    if (body.accel_0_100_sec !== undefined) car.accel_0_100_sec = (body.accel_0_100_sec as number) ?? null;
+    if (body.drivetrain !== undefined) car.drivetrain = (body.drivetrain as string) ?? null;
+    if (body.seating_capacity !== undefined) car.seating_capacity = (body.seating_capacity as number) ?? null;
+    if (body.boot_space_l !== undefined) car.boot_space_l = (body.boot_space_l as number) ?? null;
+
+    if (body.battery_kwh !== undefined) car.battery_kwh = (body.battery_kwh as number) ?? null;
+    if (body.range_km !== undefined) car.range_km = (body.range_km as number) ?? null;
+    if (body.charging_time_ac !== undefined) car.charging_time_ac = (body.charging_time_ac as string) ?? null;
+    if (body.charging_time_dc !== undefined) car.charging_time_dc = (body.charging_time_dc as string) ?? null;
+
+    if (body.insurance_valid_till !== undefined) car.insurance_valid_till = (body.insurance_valid_till as string) ?? null;
+    if (body.warranty_info !== undefined) car.warranty_info = (body.warranty_info as string) ?? null;
+    if (body.service_history !== undefined) car.service_history = (body.service_history as string) ?? null;
+
+    if (body.sunroof !== undefined) car.sunroof = Boolean(body.sunroof);
+    if (body.alloy_wheels !== undefined) car.alloy_wheels = Boolean(body.alloy_wheels);
+    if (body.led_headlamps !== undefined) car.led_headlamps = Boolean(body.led_headlamps);
+    if (body.fog_lamps !== undefined) car.fog_lamps = Boolean(body.fog_lamps);
+    if (body.rear_camera !== undefined) car.rear_camera = Boolean(body.rear_camera);
+    if (body.parking_sensors !== undefined) car.parking_sensors = Boolean(body.parking_sensors);
+
+    if (body.ventilated_seats !== undefined) car.ventilated_seats = Boolean(body.ventilated_seats);
+    if (body.leather_seats !== undefined) car.leather_seats = Boolean(body.leather_seats);
+    if (body.ambient_lighting !== undefined) car.ambient_lighting = Boolean(body.ambient_lighting);
+    if (body.digital_cluster !== undefined) car.digital_cluster = Boolean(body.digital_cluster);
+
+    if (body.airbags_count !== undefined) car.airbags_count = (body.airbags_count as number) ?? null;
+    if (body.abs !== undefined) car.abs = Boolean(body.abs);
+    if (body.esc !== undefined) car.esc = Boolean(body.esc);
+    if (body.tpms !== undefined) car.tpms = Boolean(body.tpms);
+    if (body.adas !== undefined) car.adas = Boolean(body.adas);
+
+    if (body.android_auto !== undefined) car.android_auto = Boolean(body.android_auto);
+    if (body.apple_carplay !== undefined) car.apple_carplay = Boolean(body.apple_carplay);
+    if (body.wireless_charging !== undefined) car.wireless_charging = Boolean(body.wireless_charging);
+    if (body.cruise_control !== undefined) car.cruise_control = Boolean(body.cruise_control);
+
+    if (body.emi_note !== undefined) car.emi_note = (body.emi_note as string) ?? null;
+
     await car.save();
+    await car.reload();
     res.json(serializeCar(car));
   } catch (e) {
     console.error(e);
