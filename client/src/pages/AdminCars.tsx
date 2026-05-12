@@ -84,6 +84,74 @@ const emptyForm = {
   is_featured: false,
 };
 
+function carToForm(c: ApiCar) {
+  return {
+    title: c.title,
+    brand: c.brand,
+    model: c.model,
+    year: String(c.year),
+    price: String(c.price),
+    market_price: c.market_price != null ? String(c.market_price) : "",
+    fuel_type: c.fuel_type,
+    transmission: c.transmission,
+    km_driven: String(c.km_driven),
+    location: c.location,
+    description: c.description,
+    variant_name: c.variant_name ?? "",
+    registration_year: c.registration_year != null ? String(c.registration_year) : "",
+    registration_month: c.registration_month != null ? String(c.registration_month) : "",
+    owner_count: c.owner_count != null ? String(c.owner_count) : "",
+    color: c.color ?? "",
+    body_type: c.body_type ?? "",
+    rto_city: c.rto_city ?? "",
+
+    engine_cc: c.engine_cc != null ? String(c.engine_cc) : "",
+    power_bhp: c.power_bhp != null ? String(c.power_bhp) : "",
+    torque_nm: c.torque_nm != null ? String(c.torque_nm) : "",
+    top_speed_kmph: c.top_speed_kmph != null ? String(c.top_speed_kmph) : "",
+    accel_0_100_sec: c.accel_0_100_sec != null ? String(c.accel_0_100_sec) : "",
+    drivetrain: c.drivetrain ?? "",
+    seating_capacity: c.seating_capacity != null ? String(c.seating_capacity) : "",
+    boot_space_l: c.boot_space_l != null ? String(c.boot_space_l) : "",
+
+    battery_kwh: c.battery_kwh != null ? String(c.battery_kwh) : "",
+    range_km: c.range_km != null ? String(c.range_km) : "",
+    charging_time_ac: c.charging_time_ac ?? "",
+    charging_time_dc: c.charging_time_dc ?? "",
+
+    insurance_valid_till: c.insurance_valid_till ?? "",
+    warranty_info: c.warranty_info ?? "",
+    service_history: c.service_history ?? "",
+
+    sunroof: Boolean(c.sunroof),
+    alloy_wheels: Boolean(c.alloy_wheels),
+    led_headlamps: Boolean(c.led_headlamps),
+    fog_lamps: Boolean(c.fog_lamps),
+    rear_camera: Boolean(c.rear_camera),
+    parking_sensors: Boolean(c.parking_sensors),
+
+    ventilated_seats: Boolean(c.ventilated_seats),
+    leather_seats: Boolean(c.leather_seats),
+    ambient_lighting: Boolean(c.ambient_lighting),
+    digital_cluster: Boolean(c.digital_cluster),
+
+    airbags_count: c.airbags_count != null ? String(c.airbags_count) : "",
+    abs: Boolean(c.abs),
+    esc: Boolean(c.esc),
+    tpms: Boolean(c.tpms),
+    adas: Boolean(c.adas),
+
+    android_auto: Boolean(c.android_auto),
+    apple_carplay: Boolean(c.apple_carplay),
+    wireless_charging: Boolean(c.wireless_charging),
+    cruise_control: Boolean(c.cruise_control),
+
+    emi_note: c.emi_note ?? "",
+    imageUrls: normalizeCarImageUrls(c.images),
+    is_featured: Boolean(c.is_featured),
+  };
+}
+
 function toOptionalNumber(raw: string): number | null {
   const t = raw.trim();
   if (!t) return null;
@@ -315,9 +383,19 @@ const AdminCars = () => {
       }
       return createCar(payload);
     },
-    onSuccess: () => {
+    onSuccess: (saved) => {
       toast.success(editingId ? "Car updated" : "Car created");
+      qc.invalidateQueries({ queryKey: ["cars", "admin"] });
       qc.invalidateQueries({ queryKey: ["cars"] });
+      qc.invalidateQueries({ queryKey: ["car", saved.id] });
+
+      // Keep form filled after update so re-clicking Edit shows the saved state.
+      if (editingId) {
+        setForm(carToForm(saved));
+        setEditingId(saved.id);
+        return;
+      }
+
       setForm(emptyForm);
       setEditingId(null);
     },
@@ -328,6 +406,7 @@ const AdminCars = () => {
     mutationFn: (id: number) => deleteCar(id),
     onSuccess: () => {
       toast.success("Deleted");
+      qc.invalidateQueries({ queryKey: ["cars", "admin"] });
       qc.invalidateQueries({ queryKey: ["cars"] });
     },
   });
@@ -335,139 +414,11 @@ const AdminCars = () => {
   const startEdit = async (c: ApiCar) => {
     setEditingId(c.id);
     setLoadingEdit(true);
-    setForm({
-      title: c.title,
-      brand: c.brand,
-      model: c.model,
-      year: String(c.year),
-      price: String(c.price),
-      market_price: c.market_price != null ? String(c.market_price) : "",
-      fuel_type: c.fuel_type,
-      transmission: c.transmission,
-      km_driven: String(c.km_driven),
-      location: c.location,
-      description: c.description,
-      variant_name: c.variant_name ?? "",
-      registration_year: c.registration_year != null ? String(c.registration_year) : "",
-      registration_month: c.registration_month != null ? String(c.registration_month) : "",
-      owner_count: c.owner_count != null ? String(c.owner_count) : "",
-      color: c.color ?? "",
-      body_type: c.body_type ?? "",
-      rto_city: c.rto_city ?? "",
-
-      engine_cc: c.engine_cc != null ? String(c.engine_cc) : "",
-      power_bhp: c.power_bhp != null ? String(c.power_bhp) : "",
-      torque_nm: c.torque_nm != null ? String(c.torque_nm) : "",
-      top_speed_kmph: c.top_speed_kmph != null ? String(c.top_speed_kmph) : "",
-      accel_0_100_sec: c.accel_0_100_sec != null ? String(c.accel_0_100_sec) : "",
-      drivetrain: c.drivetrain ?? "",
-      seating_capacity: c.seating_capacity != null ? String(c.seating_capacity) : "",
-      boot_space_l: c.boot_space_l != null ? String(c.boot_space_l) : "",
-
-      battery_kwh: c.battery_kwh != null ? String(c.battery_kwh) : "",
-      range_km: c.range_km != null ? String(c.range_km) : "",
-      charging_time_ac: c.charging_time_ac ?? "",
-      charging_time_dc: c.charging_time_dc ?? "",
-
-      insurance_valid_till: c.insurance_valid_till ?? "",
-      warranty_info: c.warranty_info ?? "",
-      service_history: c.service_history ?? "",
-
-      sunroof: Boolean(c.sunroof),
-      alloy_wheels: Boolean(c.alloy_wheels),
-      led_headlamps: Boolean(c.led_headlamps),
-      fog_lamps: Boolean(c.fog_lamps),
-      rear_camera: Boolean(c.rear_camera),
-      parking_sensors: Boolean(c.parking_sensors),
-
-      ventilated_seats: Boolean(c.ventilated_seats),
-      leather_seats: Boolean(c.leather_seats),
-      ambient_lighting: Boolean(c.ambient_lighting),
-      digital_cluster: Boolean(c.digital_cluster),
-
-      airbags_count: c.airbags_count != null ? String(c.airbags_count) : "",
-      abs: Boolean(c.abs),
-      esc: Boolean(c.esc),
-      tpms: Boolean(c.tpms),
-      adas: Boolean(c.adas),
-
-      android_auto: Boolean(c.android_auto),
-      apple_carplay: Boolean(c.apple_carplay),
-      wireless_charging: Boolean(c.wireless_charging),
-      cruise_control: Boolean(c.cruise_control),
-
-      emi_note: c.emi_note ?? "",
-      imageUrls: normalizeCarImageUrls(c.images),
-      is_featured: c.is_featured,
-    });
+    setForm(carToForm(c));
     try {
       const { car } = await fetchCarById(c.id);
       const urls = normalizeCarImageUrls(car.images);
-      setForm({
-        title: car.title,
-        brand: car.brand,
-        model: car.model,
-        year: String(car.year),
-        price: String(car.price),
-        market_price: car.market_price != null ? String(car.market_price) : "",
-        fuel_type: car.fuel_type,
-        transmission: car.transmission,
-        km_driven: String(car.km_driven),
-        location: car.location,
-        description: car.description,
-        variant_name: car.variant_name ?? "",
-        registration_year: car.registration_year != null ? String(car.registration_year) : "",
-        registration_month: car.registration_month != null ? String(car.registration_month) : "",
-        owner_count: car.owner_count != null ? String(car.owner_count) : "",
-        color: car.color ?? "",
-        body_type: car.body_type ?? "",
-        rto_city: car.rto_city ?? "",
-
-        engine_cc: car.engine_cc != null ? String(car.engine_cc) : "",
-        power_bhp: car.power_bhp != null ? String(car.power_bhp) : "",
-        torque_nm: car.torque_nm != null ? String(car.torque_nm) : "",
-        top_speed_kmph: car.top_speed_kmph != null ? String(car.top_speed_kmph) : "",
-        accel_0_100_sec: car.accel_0_100_sec != null ? String(car.accel_0_100_sec) : "",
-        drivetrain: car.drivetrain ?? "",
-        seating_capacity: car.seating_capacity != null ? String(car.seating_capacity) : "",
-        boot_space_l: car.boot_space_l != null ? String(car.boot_space_l) : "",
-
-        battery_kwh: car.battery_kwh != null ? String(car.battery_kwh) : "",
-        range_km: car.range_km != null ? String(car.range_km) : "",
-        charging_time_ac: car.charging_time_ac ?? "",
-        charging_time_dc: car.charging_time_dc ?? "",
-
-        insurance_valid_till: car.insurance_valid_till ?? "",
-        warranty_info: car.warranty_info ?? "",
-        service_history: car.service_history ?? "",
-
-        sunroof: Boolean(car.sunroof),
-        alloy_wheels: Boolean(car.alloy_wheels),
-        led_headlamps: Boolean(car.led_headlamps),
-        fog_lamps: Boolean(car.fog_lamps),
-        rear_camera: Boolean(car.rear_camera),
-        parking_sensors: Boolean(car.parking_sensors),
-
-        ventilated_seats: Boolean(car.ventilated_seats),
-        leather_seats: Boolean(car.leather_seats),
-        ambient_lighting: Boolean(car.ambient_lighting),
-        digital_cluster: Boolean(car.digital_cluster),
-
-        airbags_count: car.airbags_count != null ? String(car.airbags_count) : "",
-        abs: Boolean(car.abs),
-        esc: Boolean(car.esc),
-        tpms: Boolean(car.tpms),
-        adas: Boolean(car.adas),
-
-        android_auto: Boolean(car.android_auto),
-        apple_carplay: Boolean(car.apple_carplay),
-        wireless_charging: Boolean(car.wireless_charging),
-        cruise_control: Boolean(car.cruise_control),
-
-        emi_note: car.emi_note ?? "",
-        imageUrls: urls,
-        is_featured: car.is_featured,
-      });
+      setForm({ ...carToForm(car), imageUrls: urls });
       if (urls.length === 0) {
         toast.warning("No images saved — add photos and click Update.");
       }
