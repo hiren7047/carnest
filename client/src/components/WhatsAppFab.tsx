@@ -1,10 +1,14 @@
 import { MessageCircle } from "lucide-react";
 import { PRESET_FLOAT_ENQUIRY, whatsAppChatUrl } from "@/utils/whatsapp";
+import { useSiteContent } from "@/hooks/useSitePublic";
+import { resolvePublicContactDigits } from "@/utils/phone";
 
 export function WhatsAppFab() {
+  const siteContent = useSiteContent();
+  const contactDigits = resolvePublicContactDigits(siteContent.contact.whatsappNumber);
   return (
     <a
-      href={whatsAppChatUrl(PRESET_FLOAT_ENQUIRY)}
+      href={whatsAppChatUrl(PRESET_FLOAT_ENQUIRY, contactDigits)}
       target="_blank"
       rel="noreferrer"
       className="fixed bottom-20 right-4 z-40 md:bottom-6 md:right-6 flex h-14 w-14 items-center justify-center rounded-full bg-whatsapp text-white shadow-lg hover:opacity-90 transition-opacity"
