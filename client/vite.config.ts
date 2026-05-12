@@ -6,12 +6,12 @@ import { componentTagger } from "lovable-tagger";
 // https://vitejs.dev/config/
 const apiProxy = {
   "/api": {
-    target: "http://localhost:4000",
+    target: "http://127.0.0.1:4000",
     changeOrigin: true,
   },
   /** Same host as the app so `/uploads/...` works on phone/LAN (not only localhost:4000). */
   "/uploads": {
-    target: "http://localhost:4000",
+    target: "http://127.0.0.1:4000",
     changeOrigin: true,
   },
 };

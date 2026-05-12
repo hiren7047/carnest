@@ -91,8 +91,15 @@ async function start() {
     logConnectionTarget();
     await testConnection();
     console.log("[DB] MySQL connection OK");
-    const alter = process.env.NODE_ENV === "development";
+    const alter =
+      process.env.NODE_ENV === "development" ||
+      String(process.env.DB_SYNC_ALTER ?? "").trim().toLowerCase() === "true";
     await sequelize.sync({ alter });
+    if (alter && process.env.NODE_ENV === "production") {
+      console.warn(
+        "[DB] sequelize.sync({ alter: true }) is enabled in production via DB_SYNC_ALTER=true. Disable after schema is updated."
+      );
+    }
 
     const server = app.listen(PORT, () => {
       console.log(`Carnest API listening on http://localhost:${PORT}`);
