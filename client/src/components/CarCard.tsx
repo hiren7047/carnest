@@ -47,9 +47,6 @@ const CarCard = ({ car, large = false }: { car: CarView; large?: boolean }) => (
             )}
             <p className="text-base font-bold tabular-nums text-secondary sm:text-lg">
               {formatPrice(car.price)}
-              {car.marketPrice != null && car.marketPrice > car.price && (
-                <span className="ml-1.5 text-xs font-semibold text-foreground">Fixed price</span>
-              )}
             </p>
           </div>
 
@@ -73,12 +70,24 @@ const CarCard = ({ car, large = false }: { car: CarView; large?: boolean }) => (
           </div>
         </div>
 
-        <div className="pointer-events-none flex flex-col gap-2 sm:flex-row sm:gap-2">
-          <Button variant="cta" size="sm" className="h-9 w-full text-xs sm:flex-1">
-            View Details
+        <div className="flex flex-col gap-2 sm:flex-row sm:gap-2">
+          <Button
+            variant="cta"
+            size="sm"
+            className="h-9 w-full text-xs sm:flex-1"
+            asChild
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Link to={`/cars/${car.id}`}>View Details</Link>
           </Button>
-          <Button variant="outline" size="sm" className="h-9 w-full text-xs sm:flex-1">
-            Book Test Drive
+          <Button
+            variant="outline"
+            size="sm"
+            className="h-9 w-full text-xs sm:flex-1"
+            asChild
+            onClick={(e) => e.stopPropagation()}
+          >
+            <Link to={`/cars/${car.id}?book=1`}>Book Test Drive</Link>
           </Button>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useLocation } from "react-router-dom";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -95,6 +95,7 @@ function calcEmi(params: { principal: number; annualRatePct: number; months: num
 
 const CarDetail = () => {
   const { id } = useParams();
+  const location = useLocation();
   const { user } = useAuth();
   const siteContent = useSiteContent();
   const contactDigits = resolvePublicContactDigits(siteContent.contact.whatsappNumber);
@@ -108,6 +109,7 @@ const CarDetail = () => {
   const [carouselApi, setCarouselApi] = useState<CarouselApi | null>(null);
   const [downPct, setDownPct] = useState(20);
   const [tenureYears, setTenureYears] = useState(5);
+  const [interestRatePct, setInterestRatePct] = useState(10.5);
   const [leadName, setLeadName] = useState("");
   const [leadPhone, setLeadPhone] = useState("");
   const [leadCity, setLeadCity] = useState<string>("");
@@ -133,6 +135,11 @@ const CarDetail = () => {
     }
   }, [wishlist, car]);
   const similar = data?.similar?.map(mapApiCarToView) ?? [];
+
+  useEffect(() => {
+    const qs = new URLSearchParams(location.search);
+    if (qs.get("book") === "1") setBookingOpen(true);
+  }, [location.search]);
 
   const images = useMemo(() => {
     if (!car) return [];
@@ -331,7 +338,9 @@ const CarDetail = () => {
   const downAmt = Math.round((car.price * downPct) / 100);
   const principal = Math.max(0, car.price - downAmt);
   const months = Math.max(12, tenureYears * 12);
-  const estEmi = calcEmi({ principal, annualRatePct: 10.5, months });
+  const estEmi = calcEmi({ principal, annualRatePct: interestRatePct, months });
+  const totalPayable = estEmi * months + downAmt;
+  const totalInterest = Math.max(0, totalPayable - car.price);
 
   return (
     <div className="min-h-screen bg-background">
@@ -642,6 +651,14 @@ const CarDetail = () => {
                     {car.emiNote ? <p className="mt-1 text-xs text-muted-foreground">{car.emiNote}</p> : null}
                   </div>
                 </div>
+                <div className="mt-3 flex flex-wrap gap-x-6 gap-y-1 text-xs text-muted-foreground">
+                  <span>
+                    Total payable: <span className="font-semibold text-foreground tabular-nums">₹{money(totalPayable)}</span>
+                  </span>
+                  <span>
+                    Interest: <span className="font-semibold text-foreground tabular-nums">₹{money(totalInterest)}</span>
+                  </span>
+                </div>
                 <div className="mt-6 grid gap-6 lg:grid-cols-2">
                   <div className="space-y-2">
                     <div className="flex items-center justify-between text-sm">
@@ -670,8 +687,21 @@ const CarDetail = () => {
                       step={1}
                       onValueChange={(v) => setTenureYears(v[0] ?? 5)}
                     />
+                  </div>
+                  <div className="space-y-2 lg:col-span-2">
+                    <div className="flex items-center justify-between text-sm">
+                      <span className="text-muted-foreground">Interest rate</span>
+                      <span className="font-semibold tabular-nums">{interestRatePct.toFixed(1)}% p.a.</span>
+                    </div>
+                    <Slider
+                      value={[interestRatePct]}
+                      min={2}
+                      max={17}
+                      step={0.1}
+                      onValueChange={(v) => setInterestRatePct(v[0] ?? 10.5)}
+                    />
                     <p className="text-xs text-muted-foreground">
-                      Principal ₹{money(principal)} · Rate 10.5% p.a. · {months} months
+                      Principal ₹{money(principal)} · Rate {interestRatePct.toFixed(1)}% p.a. · {months} months
                     </p>
                   </div>
                 </div>
@@ -688,7 +718,7 @@ const CarDetail = () => {
             <div className="space-y-4">
               <div className="bg-card rounded-xl p-6 border border-border/50 sticky top-24">
                 <div className="bg-white dark:bg-card rounded-xl border border-border/50 p-5 shadow-sm">
-                  <p className="text-sm font-semibold text-foreground/90 text-center">Carnest Fixed Price :</p>
+                  <p className="text-sm font-semibold text-foreground/90 text-center">Price</p>
                   <p className="text-3xl font-heading font-bold text-center mt-3" style={{ color: "#cba333" }}>
                     {formatPrice(car.price)}
                   </p>
@@ -711,7 +741,6 @@ const CarDetail = () => {
                       "Peace of mind & convenience",
                       "Complete vehicle history",
                       "Quality Inventory",
-                      "6 month Warranty",
                     ].map((t) => (
                       <li key={t} className="flex items-start gap-2">
                         <ShieldCheck className="h-4 w-4 text-secondary mt-0.5 shrink-0" />
