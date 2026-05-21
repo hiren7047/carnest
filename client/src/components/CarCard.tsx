@@ -1,7 +1,7 @@
 import type { CarView } from "@/types/car";
 import { formatPrice } from "@/utils/formatPrice";
 import { formatKmDriven } from "@/utils/formatKm";
-import { Fuel, Gauge, MapPin, Settings } from "lucide-react";
+import { Calendar, Fuel, Gauge, Settings } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
@@ -64,8 +64,8 @@ const CarCard = ({ car, large = false }: { car: CarView; large?: boolean }) => (
               <span className="break-words">{car.transmission}</span>
             </div>
             <div className="flex min-w-0 items-start gap-1 text-[11px] leading-tight text-muted-foreground sm:text-xs">
-              <MapPin className="mt-0.5 h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
-              <span className="break-words">{car.location}</span>
+              <Calendar className="mt-0.5 h-3 w-3 shrink-0 sm:h-3.5 sm:w-3.5" />
+              <span className="tabular-nums">{car.year}</span>
             </div>
           </div>
         </div>
