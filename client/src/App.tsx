@@ -21,6 +21,8 @@ import AdminSellInquiries from "./pages/admin/AdminSellInquiries.tsx";
 import AdminBookings from "./pages/admin/AdminBookings.tsx";
 import AdminHomepage from "./pages/admin/AdminHomepage.tsx";
 import AdminSettings from "./pages/admin/AdminSettings.tsx";
+import AdminGallery from "./pages/admin/AdminGallery.tsx";
+import AdminReviews from "./pages/admin/AdminReviews.tsx";
 import Contact from "./pages/Contact.tsx";
 import Privacy from "./pages/Privacy.tsx";
 import Terms from "./pages/Terms.tsx";
@@ -102,6 +104,8 @@ const App = () => (
             <Route path="sell-inquiries" element={<AdminSellInquiries />} />
             <Route path="bookings" element={<AdminBookings />} />
             <Route path="homepage" element={<AdminHomepage />} />
+            <Route path="gallery" element={<AdminGallery />} />
+            <Route path="reviews" element={<AdminReviews />} />
             <Route path="settings" element={<AdminSettings />} />
           </Route>
           <Route path="*" element={<NotFound />} />

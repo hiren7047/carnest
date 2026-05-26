@@ -22,10 +22,12 @@ import {
   CalendarRange,
   Car,
   Home,
+  ImageIcon,
   Inbox,
   LayoutDashboard,
   Moon,
   Settings,
+  Star,
   Sun,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -36,6 +38,8 @@ const nav = [
   { to: "/admin/sell-inquiries", label: "Sell inquiries", end: false, icon: Inbox },
   { to: "/admin/bookings", label: "Test drives", end: false, icon: CalendarRange },
   { to: "/admin/homepage", label: "Homepage", end: false, icon: Home },
+  { to: "/admin/gallery", label: "Gallery", end: false, icon: ImageIcon },
+  { to: "/admin/reviews", label: "Reviews", end: false, icon: Star },
   { to: "/admin/settings", label: "Settings", end: false, icon: Settings },
 ];
 

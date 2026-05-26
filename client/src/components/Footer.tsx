@@ -3,6 +3,7 @@ import { Facebook, Instagram, Mail, Twitter, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "./ScrollReveal";
 import { useSearchBrands } from "@/hooks/useSearchBrands";
+import { useSiteContent } from "@/hooks/useSitePublic";
 import { useState } from "react";
 import { toast } from "sonner";
 import { BrandLogo } from "./BrandLogo";
@@ -18,11 +19,24 @@ const quickLinks: { label: string; to: string }[] = [
   { label: "Privacy Policy", to: "/privacy" },
   { label: "Terms & Conditions", to: "/terms" },
 ];
-const INSTAGRAM_URL = "https://instagram.com/carnest_surat";
+
+function openSocial(url: string, label: string) {
+  const trimmed = url?.trim();
+  if (!trimmed) {
+    toast.info(`${label} link not set yet — add it in Admin → Settings`);
+    return;
+  }
+  window.open(trimmed, "_blank", "noopener,noreferrer");
+}
 
 const Footer = () => {
   const searchBrands = useSearchBrands();
+  const { social } = useSiteContent();
   const [email, setEmail] = useState("");
+
+  const instagramDisplay = social.instagramHandle
+    ? `@${social.instagramHandle.replace(/^@/, "")}`
+    : "";
 
   const newsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -46,7 +60,7 @@ const Footer = () => {
                   type="button"
                   className="h-9 w-9 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-secondary hover:border-secondary transition-colors"
                   aria-label="Facebook"
-                  onClick={() => toast.info("Social links coming soon")}
+                  onClick={() => openSocial(social.facebookUrl, "Facebook")}
                 >
                   <Facebook className="h-4 w-4" />
                 </button>
@@ -54,7 +68,7 @@ const Footer = () => {
                   type="button"
                   className="h-9 w-9 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-secondary hover:border-secondary transition-colors"
                   aria-label="Instagram"
-                  onClick={() => window.open(INSTAGRAM_URL, "_blank", "noopener,noreferrer")}
+                  onClick={() => openSocial(social.instagramUrl, "Instagram")}
                 >
                   <Instagram className="h-4 w-4" />
                 </button>
@@ -62,7 +76,7 @@ const Footer = () => {
                   type="button"
                   className="h-9 w-9 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-secondary hover:border-secondary transition-colors"
                   aria-label="Twitter"
-                  onClick={() => toast.info("Social links coming soon")}
+                  onClick={() => openSocial(social.twitterUrl, "Twitter")}
                 >
                   <Twitter className="h-4 w-4" />
                 </button>
@@ -70,19 +84,21 @@ const Footer = () => {
                   type="button"
                   className="h-9 w-9 rounded-full border border-primary-foreground/20 flex items-center justify-center hover:bg-secondary hover:border-secondary transition-colors"
                   aria-label="YouTube"
-                  onClick={() => toast.info("Social links coming soon")}
+                  onClick={() => openSocial(social.youtubeUrl, "YouTube")}
                 >
                   <Youtube className="h-4 w-4" />
                 </button>
               </div>
-              <a
-                href={INSTAGRAM_URL}
-                target="_blank"
-                rel="noreferrer"
-                className="mt-3 inline-block text-sm text-primary-foreground/60 hover:text-secondary transition-colors"
-              >
-                @carnest_surat
-              </a>
+              {instagramDisplay && social.instagramUrl?.trim() ? (
+                <a
+                  href={social.instagramUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-3 inline-block text-sm text-primary-foreground/60 hover:text-secondary transition-colors"
+                >
+                  {instagramDisplay}
+                </a>
+              ) : null}
             </div>
 
             <div>

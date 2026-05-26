@@ -1,13 +1,15 @@
 import type { SiteContent } from "../types/siteContent.js";
 import { defaultSiteContent } from "./siteContentDefaults.js";
 
-/** Merge partial CMS JSON from DB with defaults (e.g. legacy rows without searchFilters). */
+/** Merge partial CMS JSON from DB with defaults (e.g. legacy rows missing new sections). */
 export function normalizeSiteContent(raw: unknown): SiteContent {
   const d = defaultSiteContent();
   if (!raw || typeof raw !== "object") return d;
   const c = raw as Partial<SiteContent>;
   const h = c.hero && typeof c.hero === "object" ? c.hero : undefined;
   const t = c.testimonials && typeof c.testimonials === "object" ? c.testimonials : undefined;
+  const g = c.gallery && typeof c.gallery === "object" ? c.gallery : undefined;
+  const o = c.social && typeof c.social === "object" ? c.social : undefined;
   const k = c.contact && typeof c.contact === "object" ? c.contact : undefined;
   const s = c.searchFilters && typeof c.searchFilters === "object" ? c.searchFilters : undefined;
 
@@ -24,7 +26,21 @@ export function normalizeSiteContent(raw: unknown): SiteContent {
     },
     testimonials: {
       sectionTitle: t?.sectionTitle?.trim() ? t.sectionTitle : d.testimonials.sectionTitle,
+      pageTitle: t?.pageTitle?.trim() ? t.pageTitle : d.testimonials.pageTitle,
+      pageSubtitle: t?.pageSubtitle?.trim() ? t.pageSubtitle : d.testimonials.pageSubtitle,
       items: t?.items?.length ? t.items : d.testimonials.items,
+    },
+    gallery: {
+      title: g?.title?.trim() ? g.title : d.gallery.title,
+      subtitle: g?.subtitle?.trim() ? g.subtitle : d.gallery.subtitle,
+      images: Array.isArray(g?.images) ? g.images : d.gallery.images,
+    },
+    social: {
+      facebookUrl: o?.facebookUrl ?? d.social.facebookUrl,
+      youtubeUrl: o?.youtubeUrl ?? d.social.youtubeUrl,
+      instagramUrl: o?.instagramUrl ?? d.social.instagramUrl,
+      twitterUrl: o?.twitterUrl ?? d.social.twitterUrl,
+      instagramHandle: o?.instagramHandle?.trim() ? o.instagramHandle : d.social.instagramHandle,
     },
     contact: {
       whatsappNumber: k?.whatsappNumber ?? d.contact.whatsappNumber,

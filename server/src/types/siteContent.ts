@@ -1,4 +1,16 @@
-/** Published homepage + contact shape stored in site_settings.content */
+/** Published homepage + site CMS shape stored in site_settings.content */
+export type TestimonialItem = {
+  name: string;
+  city: string;
+  rating: number;
+  text: string;
+};
+
+export type GalleryImage = {
+  imageUrl: string;
+  alt: string;
+};
+
 export type SiteContent = {
   hero: {
     eyebrow: string;
@@ -12,7 +24,21 @@ export type SiteContent = {
   };
   testimonials: {
     sectionTitle: string;
-    items: { name: string; city: string; rating: number; text: string }[];
+    pageTitle: string;
+    pageSubtitle: string;
+    items: TestimonialItem[];
+  };
+  gallery: {
+    title: string;
+    subtitle: string;
+    images: GalleryImage[];
+  };
+  social: {
+    facebookUrl: string;
+    youtubeUrl: string;
+    instagramUrl: string;
+    twitterUrl: string;
+    instagramHandle: string;
   };
   contact: {
     whatsappNumber: string;

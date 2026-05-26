@@ -20,6 +20,7 @@ const AdminSettings = () => {
 
   const defaults = defaultSiteContent();
   const [contact, setContact] = useState<SiteContent["contact"]>(defaults.contact);
+  const [social, setSocial] = useState<SiteContent["social"]>(defaults.social);
   const [brands, setBrands] = useState<string[]>(defaults.searchFilters.brands);
   const [newBrand, setNewBrand] = useState("");
 
@@ -27,6 +28,7 @@ const AdminSettings = () => {
     if (!data?.content) return;
     const content = normalizeSiteContent(data.content);
     setContact(content.contact);
+    setSocial(content.social);
     setBrands(content.searchFilters.brands);
   }, [data]);
 
@@ -34,6 +36,16 @@ const AdminSettings = () => {
     mutationFn: () => putSiteAdminMerge({ contact }),
     onSuccess: () => {
       toast.success("Contact settings saved");
+      qc.invalidateQueries({ queryKey: ["admin", "site"] });
+      qc.invalidateQueries({ queryKey: ["site", "public"] });
+    },
+    onError: () => toast.error("Save failed"),
+  });
+
+  const saveSocialMutation = useMutation({
+    mutationFn: () => putSiteAdminMerge({ social }),
+    onSuccess: () => {
+      toast.success("Social links saved");
       qc.invalidateQueries({ queryKey: ["admin", "site"] });
       qc.invalidateQueries({ queryKey: ["site", "public"] });
     },
@@ -76,9 +88,70 @@ const AdminSettings = () => {
       <div>
         <h1 className="text-2xl font-heading font-bold">Settings</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          Contact details and car search brand list used on homepage, filters, and sell form
+          Social links, contact, and car search brands
         </p>
       </div>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Social media</CardTitle>
+          <CardDescription>
+            Facebook, YouTube, Instagram, and Twitter links shown in the footer. Leave blank to hide a network.
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="space-y-4">
+          <div>
+            <Label>Facebook URL</Label>
+            <Input
+              className="mt-1"
+              value={social.facebookUrl}
+              onChange={(e) => setSocial((s) => ({ ...s, facebookUrl: e.target.value.trim() }))}
+              placeholder="https://facebook.com/carnest"
+            />
+          </div>
+          <div>
+            <Label>YouTube URL</Label>
+            <Input
+              className="mt-1"
+              value={social.youtubeUrl}
+              onChange={(e) => setSocial((s) => ({ ...s, youtubeUrl: e.target.value.trim() }))}
+              placeholder="https://youtube.com/@carnest"
+            />
+          </div>
+          <div>
+            <Label>Instagram URL</Label>
+            <Input
+              className="mt-1"
+              value={social.instagramUrl}
+              onChange={(e) => setSocial((s) => ({ ...s, instagramUrl: e.target.value.trim() }))}
+              placeholder="https://instagram.com/carnest_surat"
+            />
+          </div>
+          <div>
+            <Label>Instagram handle (display only, without @)</Label>
+            <Input
+              className="mt-1"
+              value={social.instagramHandle}
+              onChange={(e) =>
+                setSocial((s) => ({ ...s, instagramHandle: e.target.value.replace(/^@/, "").trim() }))
+              }
+              placeholder="carnest_surat"
+            />
+          </div>
+          <div>
+            <Label>Twitter / X URL (optional)</Label>
+            <Input
+              className="mt-1"
+              value={social.twitterUrl}
+              onChange={(e) => setSocial((s) => ({ ...s, twitterUrl: e.target.value.trim() }))}
+              placeholder="https://x.com/carnest"
+            />
+          </div>
+          <Button variant="cta" onClick={() => saveSocialMutation.mutate()} disabled={saveSocialMutation.isPending}>
+            Save social links
+          </Button>
+        </CardContent>
+      </Card>
 
       <Card>
         <CardHeader>

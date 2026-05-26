@@ -10,6 +10,8 @@ export function mergeSiteContent(base: SiteContent, patch: Partial<SiteContent>)
     testimonials: patch.testimonials
       ? { ...normalizedBase.testimonials, ...patch.testimonials }
       : normalizedBase.testimonials,
+    gallery: patch.gallery ? { ...normalizedBase.gallery, ...patch.gallery } : normalizedBase.gallery,
+    social: patch.social ? { ...normalizedBase.social, ...patch.social } : normalizedBase.social,
     contact: patch.contact ? { ...normalizedBase.contact, ...patch.contact } : normalizedBase.contact,
     searchFilters: patch.searchFilters
       ? { ...normalizedBase.searchFilters, ...patch.searchFilters }

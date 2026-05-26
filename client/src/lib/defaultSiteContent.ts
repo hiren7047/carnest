@@ -15,6 +15,8 @@ export function defaultSiteContent(): SiteContent {
     },
     testimonials: {
       sectionTitle: "What Our Customers Say",
+      pageTitle: "Reviews",
+      pageSubtitle: "Real feedback from buyers and sellers who chose Carnest.",
       items: [
         {
           name: "Rahul Sharma",
@@ -36,6 +38,18 @@ export function defaultSiteContent(): SiteContent {
         },
       ],
     },
+    gallery: {
+      title: "Gallery",
+      subtitle: "A glimpse of our showroom, vehicles, and the Carnest experience.",
+      images: [],
+    },
+    social: {
+      facebookUrl: "",
+      youtubeUrl: "",
+      instagramUrl: "https://instagram.com/carnest_surat",
+      twitterUrl: "",
+      instagramHandle: "carnest_surat",
+    },
     contact: {
       whatsappNumber: "919714335588",
       supportEmail: "",
@@ -48,7 +62,7 @@ export function defaultSiteContent(): SiteContent {
 
 /**
  * API may return partial CMS JSON (e.g. only `contact`). Merge with defaults so
- * `hero` / `testimonials` are never undefined.
+ * sections are never undefined.
  */
 export function normalizeSiteContent(raw: unknown): SiteContent {
   const d = defaultSiteContent();
@@ -56,6 +70,8 @@ export function normalizeSiteContent(raw: unknown): SiteContent {
   const c = raw as Partial<SiteContent>;
   const h = c.hero && typeof c.hero === "object" ? c.hero : undefined;
   const t = c.testimonials && typeof c.testimonials === "object" ? c.testimonials : undefined;
+  const g = c.gallery && typeof c.gallery === "object" ? c.gallery : undefined;
+  const o = c.social && typeof c.social === "object" ? c.social : undefined;
   const k = c.contact && typeof c.contact === "object" ? c.contact : undefined;
   const s = c.searchFilters && typeof c.searchFilters === "object" ? c.searchFilters : undefined;
 
@@ -72,7 +88,21 @@ export function normalizeSiteContent(raw: unknown): SiteContent {
     },
     testimonials: {
       sectionTitle: t?.sectionTitle?.trim() ? t.sectionTitle : d.testimonials.sectionTitle,
+      pageTitle: t?.pageTitle?.trim() ? t.pageTitle : d.testimonials.pageTitle,
+      pageSubtitle: t?.pageSubtitle?.trim() ? t.pageSubtitle : d.testimonials.pageSubtitle,
       items: t?.items?.length ? t.items : d.testimonials.items,
+    },
+    gallery: {
+      title: g?.title?.trim() ? g.title : d.gallery.title,
+      subtitle: g?.subtitle?.trim() ? g.subtitle : d.gallery.subtitle,
+      images: Array.isArray(g?.images) ? g.images : d.gallery.images,
+    },
+    social: {
+      facebookUrl: o?.facebookUrl ?? d.social.facebookUrl,
+      youtubeUrl: o?.youtubeUrl ?? d.social.youtubeUrl,
+      instagramUrl: o?.instagramUrl ?? d.social.instagramUrl,
+      twitterUrl: o?.twitterUrl ?? d.social.twitterUrl,
+      instagramHandle: o?.instagramHandle?.trim() ? o.instagramHandle : d.social.instagramHandle,
     },
     contact: {
       whatsappNumber: k?.whatsappNumber ?? d.contact.whatsappNumber,

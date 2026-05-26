@@ -12,7 +12,7 @@ import type { SiteContent } from "@/types/siteContent";
 import { normalizeSiteContent } from "@/lib/defaultSiteContent";
 import { toast } from "sonner";
 import { Skeleton } from "@/components/ui/skeleton";
-import { ExternalLink, Plus, Trash2 } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 
 const AdminHomepage = () => {
   const qc = useQueryClient();
@@ -43,34 +43,6 @@ const AdminHomepage = () => {
     setContent((c) => ({ ...c, hero: { ...c.hero, ...patch } }));
   };
 
-  const updateTestimonial = (index: number, patch: Partial<SiteContent["testimonials"]["items"][0]>) => {
-    setContent((c) => {
-      const items = [...c.testimonials.items];
-      items[index] = { ...items[index], ...patch };
-      return { ...c, testimonials: { ...c.testimonials, items } };
-    });
-  };
-
-  const addTestimonial = () => {
-    setContent((c) => ({
-      ...c,
-      testimonials: {
-        ...c.testimonials,
-        items: [...c.testimonials.items, { name: "", city: "", rating: 5, text: "" }],
-      },
-    }));
-  };
-
-  const removeTestimonial = (index: number) => {
-    setContent((c) => ({
-      ...c,
-      testimonials: {
-        ...c.testimonials,
-        items: c.testimonials.items.filter((_, i) => i !== index),
-      },
-    }));
-  };
-
   const onHeroImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files?.length) return;
@@ -98,7 +70,7 @@ const AdminHomepage = () => {
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h1 className="text-2xl font-heading font-bold">Homepage</h1>
-          <p className="text-muted-foreground text-sm mt-1">Hero and testimonials on the public home page</p>
+          <p className="text-muted-foreground text-sm mt-1">Hero section on the public home page. Manage reviews under Admin → Reviews.</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline" size="sm" asChild>
@@ -198,85 +170,6 @@ const AdminHomepage = () => {
               />
             </div>
           </div>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader className="flex flex-row items-center justify-between gap-2">
-          <div>
-            <CardTitle>Testimonials</CardTitle>
-            <CardDescription>Customer quotes section</CardDescription>
-          </div>
-          <Button type="button" variant="outline" size="sm" onClick={addTestimonial}>
-            <Plus className="h-4 w-4 mr-1" /> Add
-          </Button>
-        </CardHeader>
-        <CardContent className="space-y-4">
-          <div>
-            <Label>Section title</Label>
-            <Input
-              className="mt-1"
-              value={content.testimonials.sectionTitle}
-              onChange={(e) =>
-                setContent((c) => ({
-                  ...c,
-                  testimonials: { ...c.testimonials, sectionTitle: e.target.value },
-                }))
-              }
-            />
-          </div>
-          {content.testimonials.items.map((item, i) => (
-            <div key={i} className="rounded-lg border border-border/50 p-4 space-y-3 relative">
-              <Button
-                type="button"
-                variant="ghost"
-                size="icon"
-                className="absolute top-2 right-2"
-                onClick={() => removeTestimonial(i)}
-                aria-label="Remove"
-              >
-                <Trash2 className="h-4 w-4 text-destructive" />
-              </Button>
-              <div className="grid sm:grid-cols-2 gap-3">
-                <div>
-                  <Label>Name</Label>
-                  <Input
-                    className="mt-1"
-                    value={item.name}
-                    onChange={(e) => updateTestimonial(i, { name: e.target.value })}
-                  />
-                </div>
-                <div>
-                  <Label>City</Label>
-                  <Input
-                    className="mt-1"
-                    value={item.city}
-                    onChange={(e) => updateTestimonial(i, { city: e.target.value })}
-                  />
-                </div>
-              </div>
-              <div>
-                <Label>Rating (1–5)</Label>
-                <Input
-                  type="number"
-                  min={1}
-                  max={5}
-                  className="mt-1 max-w-[120px]"
-                  value={item.rating}
-                  onChange={(e) => updateTestimonial(i, { rating: Number(e.target.value) || 5 })}
-                />
-              </div>
-              <div>
-                <Label>Quote</Label>
-                <Textarea
-                  className="mt-1"
-                  rows={3}
-                  value={item.text}
-                  onChange={(e) => updateTestimonial(i, { text: e.target.value })}
-                />
-              </div>
-            </div>
-          ))}
         </CardContent>
       </Card>
 
