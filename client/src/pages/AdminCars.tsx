@@ -289,7 +289,7 @@ const AdminCars = () => {
 
   const { data, isLoading } = useQuery({
     queryKey: ["cars", "admin"],
-    queryFn: () => fetchCars({ limit: 100, page: 1 }),
+    queryFn: () => fetchCars({ limit: 100, page: 1, all: true }),
   });
 
   const addFiles = useCallback(async (fileList: FileList | File[]) => {

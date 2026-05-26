@@ -27,7 +27,12 @@ export async function listCars(req: Request, res: Response): Promise<void> {
     const sortField = req.query.sort === "price" ? "price" : "year";
     const orderDir = req.query.order === "asc" ? "ASC" : "DESC";
 
-    const where: Record<string, unknown> = {};
+    const adminViewAll = req.query.all === "true" && req.user?.role === "admin";
+    const where: Record<string, unknown> = adminViewAll
+      ? {}
+      : {
+          [Op.or]: [{ listing_status: "available" }, { listing_status: { [Op.is]: null } }],
+        };
     if (brand) where.brand = brand;
     if (fuel_type) where.fuel_type = fuel_type;
     if (transmission) where.transmission = transmission;
@@ -166,6 +171,11 @@ export async function getCarById(req: Request, res: Response): Promise<void> {
     }
     const car = await Car.findByPk(id);
     if (!car) {
+      res.status(404).json({ message: "Car not found" });
+      return;
+    }
+    const adminView = req.user?.role === "admin";
+    if (!adminView && (car.listing_status === "sold" || car.listing_status === "withdrawn")) {
       res.status(404).json({ message: "Car not found" });
       return;
     }

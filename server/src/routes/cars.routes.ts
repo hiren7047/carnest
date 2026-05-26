@@ -6,13 +6,13 @@ import {
   updateCar,
   deleteCar,
 } from "../controllers/cars.controller.js";
-import { authRequired, requireAdmin } from "../middlewares/auth.js";
+import { authRequired, optionalAuth, requireAdmin } from "../middlewares/auth.js";
 import { validateBody } from "../middlewares/validate.js";
 import { createCarSchema, updateCarSchema } from "../validators/cars.js";
 
 const r = Router();
-r.get("/", listCars);
-r.get("/:id", getCarById);
+r.get("/", optionalAuth, listCars);
+r.get("/:id", optionalAuth, getCarById);
 r.post("/", authRequired, requireAdmin, validateBody(createCarSchema), createCar);
 r.put("/:id", authRequired, requireAdmin, validateBody(updateCarSchema), updateCar);
 r.delete("/:id", authRequired, requireAdmin, deleteCar);

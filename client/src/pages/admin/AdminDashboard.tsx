@@ -3,12 +3,18 @@ import { Link } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchAdminStats } from "@/services/admin.service";
-import { Car, CalendarRange, Inbox, Users } from "lucide-react";
+import { Car, CalendarRange, Inbox, TrendingUp, Users } from "lucide-react";
+import { fetchStaffPerformance } from "@/services/staff.service";
 
 const AdminDashboard = () => {
   const { data, isLoading } = useQuery({
     queryKey: ["admin", "stats"],
     queryFn: fetchAdminStats,
+  });
+
+  const { data: staffPerf } = useQuery({
+    queryKey: ["admin", "staff", "performance", "current"],
+    queryFn: () => fetchStaffPerformance({ period: "current" }),
   });
 
   if (isLoading || !data) {
@@ -55,6 +61,15 @@ const AdminDashboard = () => {
       title: "Users",
       value: data.users.total,
       icon: Users,
+    },
+    {
+      title: "Sales this month",
+      value: staffPerf?.totals.sold_count ?? 0,
+      sub: staffPerf
+        ? `${staffPerf.totals.progress_percent}% of ${staffPerf.totals.target_cars || 0} target cars`
+        : undefined,
+      icon: TrendingUp,
+      href: "/admin/staff",
     },
   ];
 

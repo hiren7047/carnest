@@ -14,6 +14,8 @@ export type CarsQuery = {
   featured?: boolean;
   sort?: "price" | "year";
   order?: "asc" | "desc";
+  /** Admin only: include sold/withdrawn listings */
+  all?: boolean;
 };
 
 export async function fetchCars(params: CarsQuery = {}): Promise<CarsListResponse> {

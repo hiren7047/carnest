@@ -29,6 +29,7 @@ import {
   Settings,
   Star,
   Sun,
+  Users,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 
@@ -40,6 +41,7 @@ const nav = [
   { to: "/admin/homepage", label: "Homepage", end: false, icon: Home },
   { to: "/admin/gallery", label: "Gallery", end: false, icon: ImageIcon },
   { to: "/admin/reviews", label: "Reviews", end: false, icon: Star },
+  { to: "/admin/staff", label: "Staff & sales", end: false, icon: Users },
   { to: "/admin/settings", label: "Settings", end: false, icon: Settings },
 ];
 

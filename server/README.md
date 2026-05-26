@@ -67,6 +67,10 @@ Same as `npm run seed` with `--force`, or set `FORCE_RESEED_CARS=true` in the en
 - `POST /api/contact` — public; JSON `name`, `email`, `message`, optional `phone` (stores `contact_inquiries`)
 - `GET /api/site/public` — public; homepage CMS JSON (`hero`, `testimonials`, `contact`)
 - `GET /api/admin/stats` — admin + JWT
+- `GET /api/admin/staff` — list sales staff
+- `POST /api/admin/staff` — add staff member
+- `GET /api/admin/staff/performance?period=last|current|next` — monthly targets vs sales
+- `POST /api/admin/sales` — record sale (marks car sold, credits staff)
 - `GET /api/admin/sell-requests` — admin; query `page`, `limit`, `status`
 - `PATCH /api/admin/sell-requests/:id` — admin; body `status`, `admin_notes`
 - `GET /api/admin/bookings` — admin; query `page`, `limit`, `status`

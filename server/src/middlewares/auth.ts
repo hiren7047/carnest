@@ -47,6 +47,20 @@ export function authRequired(req: Request, res: Response, next: NextFunction): v
   }
 }
 
+/** Attach user when Bearer token is valid; never blocks the request. */
+export function optionalAuth(req: Request, res: Response, next: NextFunction): void {
+  const header = req.headers.authorization;
+  const token = header?.startsWith("Bearer ") ? header.slice(7) : null;
+  if (token) {
+    try {
+      req.user = jwt.verify(token, JWT_SECRET) as JwtPayload;
+    } catch {
+      /* ignore invalid token */
+    }
+  }
+  next();
+}
+
 export function requireAdmin(req: Request, res: Response, next: NextFunction): void {
   if (!req.user) {
     res.status(401).json({ message: "Authentication required" });

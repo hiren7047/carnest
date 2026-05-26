@@ -22,6 +22,8 @@ export class Car extends Model<InferAttributes<Car>, InferCreationAttributes<Car
   declare images: string[];
   declare description: string;
   declare is_featured: boolean;
+  declare listing_status: CreationOptional<"available" | "sold" | "withdrawn">;
+  declare sold_at: CreationOptional<Date | null>;
 
   // Rich detail fields (nullable unless always present)
   declare variant_name: CreationOptional<string | null>;
@@ -100,6 +102,12 @@ Car.init(
     images: { type: DataTypes.JSON, allowNull: false, defaultValue: [] },
     description: { type: DataTypes.TEXT, allowNull: false, defaultValue: "" },
     is_featured: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
+    listing_status: {
+      type: DataTypes.ENUM("available", "sold", "withdrawn"),
+      allowNull: false,
+      defaultValue: "available",
+    },
+    sold_at: { type: DataTypes.DATE, allowNull: true },
 
     variant_name: { type: DataTypes.STRING(180), allowNull: true },
     registration_year: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: true },
