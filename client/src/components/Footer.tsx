@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { Facebook, Instagram, Mail, Twitter, Youtube } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import ScrollReveal from "./ScrollReveal";
-import { brands } from "@/utils/constants";
+import { useSearchBrands } from "@/hooks/useSearchBrands";
 import { useState } from "react";
 import { toast } from "sonner";
 import { BrandLogo } from "./BrandLogo";
@@ -21,6 +21,7 @@ const quickLinks: { label: string; to: string }[] = [
 const INSTAGRAM_URL = "https://instagram.com/carnest_surat";
 
 const Footer = () => {
+  const searchBrands = useSearchBrands();
   const [email, setEmail] = useState("");
 
   const newsletterSubmit = (e: React.FormEvent) => {
@@ -102,7 +103,7 @@ const Footer = () => {
             <div>
               <h4 className="font-heading font-semibold mb-4">Popular Brands</h4>
               <div className="flex flex-col gap-2.5">
-                {brands.slice(0, 8).map((b) => (
+                {searchBrands.slice(0, 8).map((b) => (
                   <Link
                     key={b}
                     to={`/cars?brand=${encodeURIComponent(b)}`}

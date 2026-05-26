@@ -17,4 +17,7 @@ export type SiteContent = {
     whatsappNumber: string;
     supportEmail: string;
   };
+  searchFilters: {
+    brands: string[];
+  };
 };

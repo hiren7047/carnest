@@ -9,6 +9,7 @@ import {
 import type { SiteContent } from "../types/siteContent.js";
 import { defaultSiteContent } from "../lib/siteContentDefaults.js";
 import { mergeSiteContent } from "../lib/mergeSiteContent.js";
+import { normalizeSiteContent } from "../lib/normalizeSiteContent.js";
 import { siteContentPartialSchema } from "../validators/site.js";
 
 async function getOrCreateSiteRow() {
@@ -252,7 +253,7 @@ export async function patchBookingAdmin(req: Request, res: Response): Promise<vo
 export async function getSiteAdmin(_req: Request, res: Response): Promise<void> {
   try {
     const row = await getOrCreateSiteRow();
-    res.json({ id: row.id, content: row.content });
+    res.json({ id: row.id, content: normalizeSiteContent(row.content) });
   } catch (e) {
     console.error(e);
     res.status(500).json({ message: "Failed to load site settings" });

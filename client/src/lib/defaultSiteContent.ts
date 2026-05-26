@@ -1,4 +1,5 @@
 import type { SiteContent } from "@/types/siteContent";
+import { defaultSearchBrands } from "@/utils/constants";
 
 export function defaultSiteContent(): SiteContent {
   return {
@@ -39,6 +40,9 @@ export function defaultSiteContent(): SiteContent {
       whatsappNumber: "919714335588",
       supportEmail: "",
     },
+    searchFilters: {
+      brands: [...defaultSearchBrands],
+    },
   };
 }
 
@@ -53,6 +57,7 @@ export function normalizeSiteContent(raw: unknown): SiteContent {
   const h = c.hero && typeof c.hero === "object" ? c.hero : undefined;
   const t = c.testimonials && typeof c.testimonials === "object" ? c.testimonials : undefined;
   const k = c.contact && typeof c.contact === "object" ? c.contact : undefined;
+  const s = c.searchFilters && typeof c.searchFilters === "object" ? c.searchFilters : undefined;
 
   return {
     hero: {
@@ -72,6 +77,9 @@ export function normalizeSiteContent(raw: unknown): SiteContent {
     contact: {
       whatsappNumber: k?.whatsappNumber ?? d.contact.whatsappNumber,
       supportEmail: k?.supportEmail ?? d.contact.supportEmail,
+    },
+    searchFilters: {
+      brands: s?.brands?.length ? s.brands : d.searchFilters.brands,
     },
   };
 }

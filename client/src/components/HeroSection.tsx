@@ -2,13 +2,15 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Search, ChevronDown } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { brands, fuelTypes, modelYears } from "@/utils/constants";
+import { fuelTypes, modelYears } from "@/utils/constants";
+import { useSearchBrands } from "@/hooks/useSearchBrands";
 import heroBg from "@/assets/hero-car.jpg";
 import { useSiteContent } from "@/hooks/useSitePublic";
 import { cn } from "@/lib/utils";
 
 const HeroSection = () => {
   const content = useSiteContent();
+  const searchBrands = useSearchBrands();
   const { hero } = content;
   const [brand, setBrand] = useState("");
   const [fuel, setFuel] = useState("");
@@ -84,7 +86,7 @@ const HeroSection = () => {
             Quick search
           </p>
           <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 sm:gap-3 lg:grid-cols-4">
-            <SelectField label="Brand" value={brand} onChange={setBrand} options={brands} />
+            <SelectField label="Brand" value={brand} onChange={setBrand} options={searchBrands} />
             <SelectField label="Fuel Type" value={fuel} onChange={setFuel} options={fuelTypes} />
             <SelectField label="Year" value={year} onChange={setYear} options={modelYears} />
             <Link to={carsHref} className="flex sm:col-span-2 lg:col-span-1">

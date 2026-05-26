@@ -32,10 +32,15 @@ const contactSchema = Joi.object({
   supportEmail: Joi.string().email().allow("").required(),
 });
 
+const searchFiltersSchema = Joi.object({
+  brands: Joi.array().items(Joi.string().trim().min(1).max(120)).min(1).max(80).required(),
+});
+
 export const siteContentSchema = Joi.object({
   hero: heroSchema.required(),
   testimonials: testimonialsSchema.required(),
   contact: contactSchema.required(),
+  searchFilters: searchFiltersSchema.required(),
 });
 
 export function validateSiteContent(data: unknown): SiteContent {
@@ -51,4 +56,5 @@ export const siteContentPartialSchema = Joi.object({
   hero: Joi.object().unknown(true).optional(),
   testimonials: Joi.object().unknown(true).optional(),
   contact: Joi.object().unknown(true).optional(),
+  searchFilters: Joi.object().unknown(true).optional(),
 }).min(1);

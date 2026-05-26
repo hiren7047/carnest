@@ -14,7 +14,12 @@ export const brands = [
   "MG",
   "Hyundai",
   "Tata",
+  "Kia",
+  "Skoda",
 ];
+
+/** Default brands for car search when CMS has no custom list */
+export const defaultSearchBrands = brands;
 
 export const fuelTypes = ["Petrol", "Diesel", "Electric", "Hybrid", "CNG"];
 

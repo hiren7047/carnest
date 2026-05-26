@@ -1,5 +1,6 @@
 import { Button } from "@/components/ui/button";
-import { brands, fuelTypes, transmissions, locations, modelYears } from "@/utils/constants";
+import { fuelTypes, transmissions, locations, modelYears } from "@/utils/constants";
+import { useSearchBrands } from "@/hooks/useSearchBrands";
 import { ChevronDown } from "lucide-react";
 
 export type FilterState = {
@@ -74,9 +75,11 @@ export function FilterSidebar({
   onClear,
   formatPrice,
 }: Props) {
+  const searchBrands = useSearchBrands();
+
   return (
     <div className="space-y-4">
-      <FilterSelect label="Brand" value={brand} onChange={onBrand} options={brands} />
+      <FilterSelect label="Brand" value={brand} onChange={onBrand} options={searchBrands} />
       <FilterSelect label="Fuel Type" value={fuel} onChange={onFuel} options={fuelTypes} />
       <FilterSelect label="Transmission" value={trans} onChange={onTrans} options={transmissions} />
       <FilterSelect label="Years" value={year} onChange={onYear} options={modelYears} />
