@@ -34,11 +34,12 @@ const Navbar = () => {
   const register = useAppPath("/register");
   const demo = useDemo();
   const pathFor = (p: string) => appPath(demo?.slug ?? null, p);
+  const navHeight = demo?.branding.logo_url ? "h-[4.5rem]" : "h-16";
 
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 glass border-b border-border/50">
-        <div className="container flex items-center justify-between h-16">
+        <div className={`container flex items-center justify-between ${navHeight}`}>
           <BrandLogo imageClassName="h-9" />
 
           <div className="hidden md:flex items-center gap-6 lg:gap-8">

@@ -56,7 +56,7 @@ const Footer = () => {
         <ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             <div>
-              <BrandLogo className="mb-4" imageClassName="h-10" />
+              <BrandLogo className="mb-4" imageClassName={demo?.branding.logo_url ? "h-14" : "h-10"} />
               <p className="text-sm text-primary-foreground/60 leading-relaxed">
                 India's most trusted premium car marketplace. Curated luxury vehicles with complete transparency.
               </p>

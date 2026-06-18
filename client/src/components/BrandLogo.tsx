@@ -17,8 +17,8 @@ export function BrandLogo({ to = "/", className = "", imageClassName = "" }: Bra
   const customLogo = demo?.branding.logo_url;
   const src = customLogo ? resolveMediaUrl(customLogo) : logo;
   const imgClass = customLogo
-    ? "h-11 md:h-12 w-auto max-w-[200px] md:max-w-[240px] object-contain object-left"
-    : `h-8 w-auto object-contain ${imageClassName}`.trim();
+    ? "h-14 sm:h-16 w-auto min-w-[140px] max-w-[min(300px,60vw)] object-contain object-left"
+    : `h-9 w-auto object-contain ${imageClassName}`.trim();
 
   return (
     <Link to={homePath} className={`inline-flex items-center shrink-0 ${className}`.trim()} aria-label={`${alt} home`}>
