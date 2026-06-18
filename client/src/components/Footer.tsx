@@ -8,6 +8,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { BrandLogo } from "./BrandLogo";
 import { useDemo } from "@/context/DemoContext";
+import { useDemoSlug } from "@/hooks/useAppPath";
 import { appPath } from "@/lib/demoMode";
 
 const quickLinks: { label: string; to: string }[] = [
@@ -35,7 +36,8 @@ const Footer = () => {
   const searchBrands = useSearchBrands();
   const { social } = useSiteContent();
   const demo = useDemo();
-  const to = (path: string) => appPath(demo?.slug ?? null, path);
+  const demoSlug = useDemoSlug();
+  const to = (path: string) => appPath(demoSlug, path);
   const [email, setEmail] = useState("");
   const brandName = demo?.branding.business_name ?? demo?.clientName ?? "Carnest";
 
@@ -56,7 +58,7 @@ const Footer = () => {
         <ScrollReveal>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
             <div>
-              <BrandLogo className="mb-4" imageClassName={demo?.branding.logo_url ? "h-14" : "h-10"} />
+              <BrandLogo className="mb-4" />
               <p className="text-sm text-primary-foreground/60 leading-relaxed">
                 India's most trusted premium car marketplace. Curated luxury vehicles with complete transparency.
               </p>

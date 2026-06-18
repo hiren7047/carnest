@@ -4,7 +4,7 @@ import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/she
 import { Button } from "@/components/ui/button";
 import { primaryNavItems } from "@/config/nav";
 import { useAppAuth } from "@/context/DemoAuthContext";
-import { useAppPath } from "@/hooks/useAppPath";
+import { useAppPath, useDemoSlug } from "@/hooks/useAppPath";
 import { appPath } from "@/lib/demoMode";
 import { useDemo } from "@/context/DemoContext";
 import { BrandLogo } from "@/components/BrandLogo";
@@ -16,8 +16,8 @@ type MobileNavDrawerProps = {
 
 export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
   const { user, logout } = useAppAuth();
-  const demo = useDemo();
-  const pathFor = (p: string) => appPath(demo?.slug ?? null, p);
+  const demoSlug = useDemoSlug();
+  const pathFor = (p: string) => appPath(demoSlug, p);
   const admin = useAppPath("/admin");
   const dashboard = useAppPath("/dashboard");
   const login = useAppPath("/login");

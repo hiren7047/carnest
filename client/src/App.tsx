@@ -58,18 +58,6 @@ function PublicChrome() {
   );
 }
 
-function DemoChrome() {
-  const { pathname } = useLocation();
-  if (!pathname.startsWith("/d/")) return null;
-  if (pathname.includes("/admin")) return null;
-  return (
-    <>
-      <MobileBottomNav />
-      <FloatingActions />
-    </>
-  );
-}
-
 const App = () => (
   <TooltipProvider>
     <Toaster />
@@ -175,7 +163,6 @@ const App = () => (
         </Routes>
       </div>
       <PublicChrome />
-      <DemoChrome />
     </BrowserRouter>
   </TooltipProvider>
 );

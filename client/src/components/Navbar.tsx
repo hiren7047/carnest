@@ -3,7 +3,7 @@ import { ChevronDown, Menu, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useAppAuth } from "@/context/DemoAuthContext";
-import { useAppPath } from "@/hooks/useAppPath";
+import { useAppPath, useDemoSlug } from "@/hooks/useAppPath";
 import { appPath } from "@/lib/demoMode";
 import { useDemo } from "@/context/DemoContext";
 import { useTheme } from "next-themes";
@@ -33,8 +33,10 @@ const Navbar = () => {
   const dashboard = useAppPath("/dashboard");
   const register = useAppPath("/register");
   const demo = useDemo();
-  const pathFor = (p: string) => appPath(demo?.slug ?? null, p);
-  const navHeight = demo?.branding.logo_url ? "h-[4.5rem]" : "h-16";
+  const demoSlug = useDemoSlug();
+  const pathFor = (p: string) => appPath(demoSlug, p);
+  const customLogo = demo?.branding.logo_url;
+  const navHeight = customLogo ? "h-[5rem] sm:h-[5.5rem]" : demoSlug ? "h-[4.5rem]" : "h-16";
 
   return (
     <>

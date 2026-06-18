@@ -7,15 +7,15 @@ import { useSearchBrands } from "@/hooks/useSearchBrands";
 import heroBg from "@/assets/hero-car.jpg";
 import { useSiteContent } from "@/hooks/useSitePublic";
 import { appPath } from "@/lib/demoMode";
-import { useDemo } from "@/context/DemoContext";
+import { useDemoSlug } from "@/hooks/useAppPath";
 import { cn } from "@/lib/utils";
 
 const HeroSection = () => {
   const content = useSiteContent();
-  const demo = useDemo();
+  const demoSlug = useDemoSlug();
   const searchBrands = useSearchBrands();
   const { hero } = content;
-  const path = (p: string) => appPath(demo?.slug ?? null, p);
+  const path = (p: string) => appPath(demoSlug, p);
   const [brand, setBrand] = useState("");
   const [fuel, setFuel] = useState("");
   const [year, setYear] = useState("");

@@ -3,9 +3,11 @@ import { PageShell } from "@/components/PageShell";
 import { Button } from "@/components/ui/button";
 import { getPostBySlug } from "@/data/blogPosts";
 import NotFound from "@/pages/NotFound";
+import { useAppPath } from "@/hooks/useAppPath";
 
 const BlogPost = () => {
   const { slug } = useParams<{ slug: string }>();
+  const blogsPath = useAppPath("/blogs");
   const post = slug ? getPostBySlug(slug) : undefined;
 
   if (!post) {
@@ -22,7 +24,7 @@ const BlogPost = () => {
         ))}
       </div>
       <Button variant="outline" className="mt-8" asChild>
-        <Link to="/blogs">Back to blogs</Link>
+        <Link to={blogsPath}>Back to blogs</Link>
       </Button>
     </PageShell>
   );

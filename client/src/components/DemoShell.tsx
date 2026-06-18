@@ -3,6 +3,8 @@ import { DemoProvider } from "@/context/DemoContext";
 import { DemoThemeProvider } from "@/components/DemoThemeProvider";
 import { DemoAuthProvider } from "@/context/DemoAuthContext";
 import { DemoCredentialsBanner } from "@/components/DemoCredentialsBanner";
+import { MobileBottomNav } from "@/components/MobileBottomNav";
+import { FloatingActions } from "@/components/FloatingActions";
 
 export function DemoShell() {
   const { demoSlug } = useParams<{ demoSlug: string }>();
@@ -14,6 +16,8 @@ export function DemoShell() {
         <DemoAuthProvider>
           <DemoCredentialsBanner />
           <Outlet />
+          <MobileBottomNav />
+          <FloatingActions />
         </DemoAuthProvider>
       </DemoThemeProvider>
     </DemoProvider>

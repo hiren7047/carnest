@@ -1,6 +1,6 @@
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
 import { useAppAuth } from "@/context/DemoAuthContext";
-import { useAppPath } from "@/hooks/useAppPath";
+import { useAppPath, useDemoSlug } from "@/hooks/useAppPath";
 import { useDemo } from "@/context/DemoContext";
 import { appPath } from "@/lib/demoMode";
 import { useTheme } from "next-themes";
@@ -78,13 +78,14 @@ const AdminLayout = () => {
   const { user, logout } = useAppAuth();
   const { theme, setTheme } = useTheme();
   const demo = useDemo();
+  const demoSlug = useDemoSlug();
   const home = useAppPath("/");
   const adminTitle = demo?.branding.business_name
     ? `${demo.branding.business_name} Admin`
     : "Carnest Admin";
   const navWithPaths = nav.map((item) => ({
     ...item,
-    to: appPath(demo?.slug ?? null, item.to),
+    to: appPath(demoSlug, item.to),
   }));
 
   return (
