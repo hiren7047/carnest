@@ -8,6 +8,7 @@
     "build": "tsc",
     "start": "node dist/index.js",
     "seed": "tsx scripts/seed.ts",
+    "seed:demo-hub": "tsx scripts/seed-demo-hub.ts",
     "seed:refresh": "tsx scripts/seed.ts --force",
     "sync:cars": "tsx scripts/sync-car-images.ts",
     "create-admin": "tsx scripts/create-admin.ts",
@@ -25,6 +26,7 @@
     "morgan": "^1.10.0",
     "multer": "^1.4.5-lts.1",
     "mysql2": "^3.11.4",
+    "pg": "^8.21.0",
     "sequelize": "^6.37.5"
   },
   "devDependencies": {

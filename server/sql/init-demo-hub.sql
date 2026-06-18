@@ -1,0 +1,7 @@
+-- Demo hub tables live in the SAME database as production (carnest_db on server).
+-- Run: npm run seed:demo-hub  (after API first start / sequelize sync)
+--
+-- Local Docker:
+--   docker compose up -d
+--   copy .env.local.example → server/.env
+--   cd server && npm run dev && npm run seed:demo-hub

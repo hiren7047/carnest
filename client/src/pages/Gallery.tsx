@@ -3,9 +3,12 @@ import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { useSiteContent } from "@/hooks/useSitePublic";
 import { resolveMediaUrl } from "@/utils/mediaUrl";
+import { useAppPath } from "@/hooks/useAppPath";
 
 const Gallery = () => {
   const { gallery } = useSiteContent();
+  const carsPath = useAppPath("/cars");
+  const contactPath = useAppPath("/contact");
 
   return (
     <PageShell wide title={gallery.title} subtitle={gallery.subtitle}>
@@ -29,10 +32,10 @@ const Gallery = () => {
       )}
       <div className="mt-10 flex flex-wrap gap-3">
         <Button variant="cta" asChild>
-          <Link to="/cars">Browse car stock</Link>
+          <Link to={carsPath}>Browse car stock</Link>
         </Button>
         <Button variant="outline" asChild>
-          <Link to="/contact">Book a visit</Link>
+          <Link to={contactPath}>Book a visit</Link>
         </Button>
       </div>
     </PageShell>

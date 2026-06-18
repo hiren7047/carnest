@@ -1,4 +1,4 @@
-import { useParams, Link, useLocation } from "react-router-dom";
+import { useAppPath } from "@/hooks/useAppPath";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
@@ -96,6 +96,8 @@ function calcEmi(params: { principal: number; annualRatePct: number; months: num
 const CarDetail = () => {
   const { id } = useParams();
   const location = useLocation();
+  const homePath = useAppPath("/");
+  const carsPath = useAppPath("/cars");
   const { user } = useAuth();
   const siteContent = useSiteContent();
   const contactDigits = resolvePublicContactDigits(siteContent.contact.whatsappNumber);
@@ -268,7 +270,7 @@ const CarDetail = () => {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <h2 className="text-2xl font-heading font-bold mb-4">Car not found</h2>
-          <Link to="/cars">
+          <Link to={carsPath}>
             <Button variant="cta">Browse Cars</Button>
           </Link>
         </div>
@@ -348,11 +350,11 @@ const CarDetail = () => {
       <div className="pt-20 pb-16">
         <div className="container">
           <div className="flex items-center gap-2 text-sm text-muted-foreground mb-6">
-            <Link to="/" className="hover:text-secondary">
+            <Link to={homePath} className="hover:text-secondary">
               Home
             </Link>{" "}
             /{" "}
-            <Link to="/cars" className="hover:text-secondary">
+            <Link to={carsPath} className="hover:text-secondary">
               Cars
             </Link>{" "}
             / <span className="text-foreground">{car.name}</span>

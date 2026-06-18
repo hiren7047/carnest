@@ -1,3 +1,4 @@
+import { dbInteger, dbSmallInt, dbTinyInt, dbBigInt } from "../lib/dbTypes.js";
 import {
   DataTypes,
   Model,
@@ -21,15 +22,15 @@ export class CarSale extends Model<InferAttributes<CarSale>, InferCreationAttrib
 CarSale.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: dbInteger,
       autoIncrement: true,
       primaryKey: true,
     },
-    car_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false, unique: true },
-    staff_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-    sale_price: { type: DataTypes.BIGINT.UNSIGNED, allowNull: false },
+    car_id: { type: dbInteger, allowNull: false, unique: true },
+    staff_id: { type: dbInteger, allowNull: false },
+    sale_price: { type: dbBigInt, allowNull: false },
     sold_at: { type: DataTypes.DATE, allowNull: false },
     notes: { type: DataTypes.TEXT, allowNull: true },
-  },
+  } as never,
   { sequelize, tableName: "car_sales", modelName: "CarSale" }
 );

@@ -1,10 +1,12 @@
 import { Navigate, useLocation } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
+import { useAppAuth } from "@/context/DemoAuthContext";
+import { useAppPath } from "@/hooks/useAppPath";
 import { Skeleton } from "@/components/ui/skeleton";
 
 export function ProtectedRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading } = useAppAuth();
   const location = useLocation();
+  const loginPath = useAppPath("/login");
 
   if (loading) {
     return (
@@ -15,15 +17,17 @@ export function ProtectedRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
   return <>{children}</>;
 }
 
 export function AdminRoute({ children }: { children: React.ReactNode }) {
-  const { user, loading } = useAuth();
+  const { user, loading } = useAppAuth();
   const location = useLocation();
+  const loginPath = useAppPath("/login");
+  const homePath = useAppPath("/");
 
   if (loading) {
     return (
@@ -34,11 +38,11 @@ export function AdminRoute({ children }: { children: React.ReactNode }) {
   }
 
   if (!user) {
-    return <Navigate to="/login" state={{ from: location }} replace />;
+    return <Navigate to={loginPath} state={{ from: location }} replace />;
   }
 
   if (user.role !== "admin") {
-    return <Navigate to="/" replace />;
+    return <Navigate to={homePath} replace />;
   }
 
   return <>{children}</>;

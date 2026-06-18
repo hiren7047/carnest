@@ -1,3 +1,4 @@
+import { dbInteger, dbSmallInt, dbTinyInt, dbBigInt } from "../lib/dbTypes.js";
 import {
   DataTypes,
   Model,
@@ -85,19 +86,19 @@ export class Car extends Model<InferAttributes<Car>, InferCreationAttributes<Car
 Car.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: dbInteger,
       autoIncrement: true,
       primaryKey: true,
     },
     title: { type: DataTypes.STRING(255), allowNull: false },
     brand: { type: DataTypes.STRING(120), allowNull: false },
     model: { type: DataTypes.STRING(120), allowNull: false },
-    year: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: false },
-    price: { type: DataTypes.BIGINT.UNSIGNED, allowNull: false },
-    market_price: { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
+    year: { type: dbSmallInt, allowNull: false },
+    price: { type: dbBigInt, allowNull: false },
+    market_price: { type: dbBigInt, allowNull: true },
     fuel_type: { type: DataTypes.STRING(60), allowNull: false },
     transmission: { type: DataTypes.STRING(60), allowNull: false },
-    km_driven: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false, defaultValue: 0 },
+    km_driven: { type: dbInteger, allowNull: false, defaultValue: 0 },
     location: { type: DataTypes.STRING(120), allowNull: false },
     images: { type: DataTypes.JSON, allowNull: false, defaultValue: [] },
     description: { type: DataTypes.TEXT, allowNull: false, defaultValue: "" },
@@ -110,24 +111,24 @@ Car.init(
     sold_at: { type: DataTypes.DATE, allowNull: true },
 
     variant_name: { type: DataTypes.STRING(180), allowNull: true },
-    registration_year: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: true },
-    registration_month: { type: DataTypes.TINYINT.UNSIGNED, allowNull: true },
-    owner_count: { type: DataTypes.TINYINT.UNSIGNED, allowNull: true },
+    registration_year: { type: dbSmallInt, allowNull: true },
+    registration_month: { type: dbTinyInt, allowNull: true },
+    owner_count: { type: dbTinyInt, allowNull: true },
     color: { type: DataTypes.STRING(80), allowNull: true },
     body_type: { type: DataTypes.STRING(80), allowNull: true },
     rto_city: { type: DataTypes.STRING(120), allowNull: true },
 
-    engine_cc: { type: DataTypes.INTEGER.UNSIGNED, allowNull: true },
+    engine_cc: { type: dbInteger, allowNull: true },
     power_bhp: { type: DataTypes.DECIMAL(6, 1), allowNull: true },
     torque_nm: { type: DataTypes.DECIMAL(7, 1), allowNull: true },
-    top_speed_kmph: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: true },
+    top_speed_kmph: { type: dbSmallInt, allowNull: true },
     accel_0_100_sec: { type: DataTypes.DECIMAL(4, 1), allowNull: true },
     drivetrain: { type: DataTypes.STRING(40), allowNull: true },
-    seating_capacity: { type: DataTypes.TINYINT.UNSIGNED, allowNull: true },
-    boot_space_l: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: true },
+    seating_capacity: { type: dbTinyInt, allowNull: true },
+    boot_space_l: { type: dbSmallInt, allowNull: true },
 
     battery_kwh: { type: DataTypes.DECIMAL(6, 1), allowNull: true },
-    range_km: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: true },
+    range_km: { type: dbSmallInt, allowNull: true },
     charging_time_ac: { type: DataTypes.STRING(120), allowNull: true },
     charging_time_dc: { type: DataTypes.STRING(120), allowNull: true },
 
@@ -147,7 +148,7 @@ Car.init(
     ambient_lighting: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     digital_cluster: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
 
-    airbags_count: { type: DataTypes.TINYINT.UNSIGNED, allowNull: true },
+    airbags_count: { type: dbTinyInt, allowNull: true },
     abs: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     esc: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },
     tpms: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: false },

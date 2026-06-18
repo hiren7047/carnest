@@ -5,13 +5,18 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useAuth } from "@/context/AuthContext";
+import { useAppAuth } from "@/context/DemoAuthContext";
+import { useDemo } from "@/context/DemoContext";
+import { useAppPath } from "@/hooks/useAppPath";
 
 const Login = () => {
-  const { login } = useAuth();
+  const { login } = useAppAuth();
+  const demo = useDemo();
   const navigate = useNavigate();
   const location = useLocation();
-  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? "/dashboard";
+  const defaultFrom = useAppPath("/dashboard");
+  const registerPath = useAppPath("/register");
+  const from = (location.state as { from?: { pathname: string } })?.from?.pathname ?? defaultFrom;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
@@ -42,6 +47,16 @@ const Login = () => {
         <div className="w-full max-w-md bg-card rounded-2xl border border-border/50 p-8 shadow-sm">
           <h1 className="text-2xl font-heading font-bold text-center mb-2">Welcome back</h1>
           <p className="text-sm text-muted-foreground text-center mb-8">Sign in to manage saved cars and bookings</p>
+          {demo && (
+            <div className="mb-6 rounded-lg border border-border/60 bg-muted/40 p-3 text-xs text-muted-foreground space-y-1">
+              <p>
+                <strong>Admin:</strong> {demo.credentials.admin.email} / {demo.credentials.admin.password}
+              </p>
+              <p>
+                <strong>Buyer:</strong> {demo.credentials.buyer.email} / {demo.credentials.buyer.password}
+              </p>
+            </div>
+          )}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <Label htmlFor="email">Email</Label>
@@ -73,7 +88,7 @@ const Login = () => {
           </form>
           <p className="text-center text-sm text-muted-foreground mt-6">
             No account?{" "}
-            <Link to="/register" className="text-secondary font-medium hover:underline">
+            <Link to={registerPath} className="text-secondary font-medium hover:underline">
               Register
             </Link>
           </p>

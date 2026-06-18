@@ -1,3 +1,4 @@
+import { dbInteger, dbSmallInt, dbTinyInt, dbBigInt } from "../lib/dbTypes.js";
 import {
   DataTypes,
   Model,
@@ -25,16 +26,16 @@ export class StaffMonthlyTarget extends Model<
 StaffMonthlyTarget.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: dbInteger,
       autoIncrement: true,
       primaryKey: true,
     },
-    staff_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-    year: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: false },
-    month: { type: DataTypes.TINYINT.UNSIGNED, allowNull: false },
-    target_cars: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false, defaultValue: 0 },
-    target_revenue: { type: DataTypes.BIGINT.UNSIGNED, allowNull: true },
+    staff_id: { type: dbInteger, allowNull: false },
+    year: { type: dbSmallInt, allowNull: false },
+    month: { type: dbTinyInt, allowNull: false },
+    target_cars: { type: dbInteger, allowNull: false, defaultValue: 0 },
+    target_revenue: { type: dbBigInt, allowNull: true },
     notes: { type: DataTypes.STRING(500), allowNull: true },
-  },
+  } as never,
   { sequelize, tableName: "staff_monthly_targets", modelName: "StaffMonthlyTarget" }
 );

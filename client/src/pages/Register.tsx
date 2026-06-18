@@ -7,9 +7,13 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/context/AuthContext";
 
+import { useAppPath } from "@/hooks/useAppPath";
+
 const Register = () => {
   const { register } = useAuth();
   const navigate = useNavigate();
+  const loginPath = useAppPath("/login");
+  const dashboardPath = useAppPath("/dashboard");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -20,7 +24,7 @@ const Register = () => {
     setLoading(true);
     try {
       await register(name, email, password);
-      navigate("/dashboard", { replace: true });
+      navigate(dashboardPath, { replace: true });
     } catch {
       /* toast */
     } finally {
@@ -78,7 +82,7 @@ const Register = () => {
           </form>
           <p className="text-center text-sm text-muted-foreground mt-6">
             Already have an account?{" "}
-            <Link to="/login" className="text-secondary font-medium hover:underline">
+            <Link to={loginPath} className="text-secondary font-medium hover:underline">
               Sign in
             </Link>
           </p>

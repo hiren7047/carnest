@@ -11,15 +11,19 @@ import { toast } from "sonner";
 import { whatsAppChatUrl, PRESET_HERO_ENQUIRY } from "@/utils/whatsapp";
 import { digitsToTelHref, formatPhoneDisplay, resolvePublicContactDigits } from "@/utils/phone";
 import { useSiteContent } from "@/hooks/useSitePublic";
-
-const OFFICE_EMAIL = "hello@carnest.in";
-const OFFICE_ADDRESS = "Shiv Ashirwad Compound, Between Polaris and Param Hospital, BRTS Canal Road, Varachha, Surat.";
-const OFFICE_MAPS_LINK = "https://maps.app.goo.gl/P1Tg8eKr2X2Y6My5A";
-const INSTAGRAM_URL = "https://instagram.com/carnest_surat";
+import { useDemo } from "@/context/DemoContext";
 
 const Contact = () => {
   const siteContent = useSiteContent();
+  const demo = useDemo();
   const contactDigits = resolvePublicContactDigits(siteContent.contact.whatsappNumber);
+  const officeEmail = siteContent.contact.supportEmail || (demo ? `hello@${demo.slug}.demo` : "hello@carnest.in");
+  const officeAddress =
+    demo?.contact.office_address ??
+    "Shiv Ashirwad Compound, Between Polaris and Param Hospital, BRTS Canal Road, Varachha, Surat.";
+  const officeMapsLink = demo?.contact.maps_url ?? "https://maps.app.goo.gl/P1Tg8eKr2X2Y6My5A";
+  const instagramUrl =
+    (demo?.contact.instagram_url ?? siteContent.social.instagramUrl) || "https://instagram.com/carnest_surat";
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -61,12 +65,12 @@ const Contact = () => {
                 <div>
                   <p className="font-medium text-foreground">Office</p>
                   <a
-                    href={OFFICE_MAPS_LINK}
+                    href={officeMapsLink}
                     target="_blank"
                     rel="noreferrer"
                     className="text-sm text-secondary hover:underline"
                   >
-                    {OFFICE_ADDRESS}
+                    {officeAddress}
                   </a>
                 </div>
               </div>
@@ -83,8 +87,8 @@ const Contact = () => {
                 <Mail className="h-5 w-5 text-secondary shrink-0" />
                 <div>
                   <p className="font-medium text-foreground">Email</p>
-                  <a href={`mailto:${OFFICE_EMAIL}`} className="text-sm text-secondary hover:underline">
-                    {OFFICE_EMAIL}
+                  <a href={`mailto:${officeEmail}`} className="text-sm text-secondary hover:underline">
+                    {officeEmail}
                   </a>
                 </div>
               </div>
@@ -106,8 +110,8 @@ const Contact = () => {
                 <Instagram className="h-5 w-5 text-secondary shrink-0" />
                 <div>
                   <p className="font-medium text-foreground">Instagram</p>
-                  <a href={INSTAGRAM_URL} target="_blank" rel="noreferrer" className="text-sm text-secondary hover:underline">
-                    @carnest_surat
+                  <a href={instagramUrl} target="_blank" rel="noreferrer" className="text-sm text-secondary hover:underline">
+                    {siteContent.social.instagramHandle || "Instagram"}
                   </a>
                 </div>
               </div>

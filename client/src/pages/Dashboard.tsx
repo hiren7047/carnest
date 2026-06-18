@@ -11,7 +11,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { Badge } from "@/components/ui/badge";
 import { formatPrice } from "@/utils/formatPrice";
 
+import { useAppPath } from "@/hooks/useAppPath";
+
 const Dashboard = () => {
+  const carsPath = useAppPath("/cars");
   const { data: wishlist, isLoading: wlLoading } = useQuery({
     queryKey: ["wishlist"],
     queryFn: fetchWishlist,
@@ -43,7 +46,7 @@ const Dashboard = () => {
             ) : saved.length === 0 ? (
               <p className="text-muted-foreground">
                 No saved cars yet.{" "}
-                <Link to="/cars" className="text-secondary underline">
+                <Link to={carsPath} className="text-secondary underline">
                   Browse listings
                 </Link>
               </p>

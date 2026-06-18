@@ -1,3 +1,4 @@
+import { dbInteger, dbSmallInt, dbTinyInt, dbBigInt } from "../lib/dbTypes.js";
 import {
   DataTypes,
   Model,
@@ -27,7 +28,7 @@ export class SellRequest extends Model<
 SellRequest.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: dbInteger,
       autoIncrement: true,
       primaryKey: true,
     },

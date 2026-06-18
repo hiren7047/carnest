@@ -1,3 +1,4 @@
+import { dbInteger, dbSmallInt, dbTinyInt, dbBigInt } from "../lib/dbTypes.js";
 import {
   DataTypes,
   Model,
@@ -21,7 +22,7 @@ export class SiteSettings extends Model<
 SiteSettings.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: dbInteger,
       primaryKey: true,
     },
     content: { type: DataTypes.JSON, allowNull: false },

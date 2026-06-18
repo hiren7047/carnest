@@ -6,12 +6,16 @@ import { fuelTypes, modelYears } from "@/utils/constants";
 import { useSearchBrands } from "@/hooks/useSearchBrands";
 import heroBg from "@/assets/hero-car.jpg";
 import { useSiteContent } from "@/hooks/useSitePublic";
+import { appPath } from "@/lib/demoMode";
+import { useDemo } from "@/context/DemoContext";
 import { cn } from "@/lib/utils";
 
 const HeroSection = () => {
   const content = useSiteContent();
+  const demo = useDemo();
   const searchBrands = useSearchBrands();
   const { hero } = content;
+  const path = (p: string) => appPath(demo?.slug ?? null, p);
   const [brand, setBrand] = useState("");
   const [fuel, setFuel] = useState("");
   const [year, setYear] = useState("");
@@ -21,7 +25,7 @@ const HeroSection = () => {
   if (fuel) searchParams.set("fuel_type", fuel);
   if (year) searchParams.set("year", year);
   const qs = searchParams.toString();
-  const carsHref = qs ? `/cars?${qs}` : "/cars";
+  const carsHref = qs ? `${path("/cars")}?${qs}` : path("/cars");
 
   const bgSrc = hero.heroImageUrl?.trim() ? hero.heroImageUrl : heroBg;
   const lines = hero.headlineLines.length ? hero.headlineLines : ["Driven by Trust.", "Defined by Quality."];
@@ -70,10 +74,10 @@ const HeroSection = () => {
           className="mb-8 grid w-full max-w-md grid-cols-2 gap-3 animate-fade-up sm:mx-auto md:mb-10 md:max-w-xl"
           style={{ animationDelay: "0.4s" }}
         >
-          <HeroCta href={hero.primaryCtaHref} variant="hero">
+          <HeroCta href={path(hero.primaryCtaHref)} variant="hero">
             {hero.primaryCtaLabel}
           </HeroCta>
-          <HeroCta href={hero.secondaryCtaHref} variant="hero-outline">
+          <HeroCta href={path(hero.secondaryCtaHref)} variant="hero-outline">
             {hero.secondaryCtaLabel}
           </HeroCta>
         </div>

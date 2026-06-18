@@ -1,3 +1,4 @@
+import { dbInteger, dbSmallInt, dbTinyInt, dbBigInt } from "../lib/dbTypes.js";
 import {
   DataTypes,
   Model,
@@ -25,7 +26,7 @@ export class StaffMember extends Model<
 StaffMember.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: dbInteger,
       autoIncrement: true,
       primaryKey: true,
     },
@@ -34,7 +35,7 @@ StaffMember.init(
     email: { type: DataTypes.STRING(255), allowNull: true },
     is_active: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
     color: { type: DataTypes.STRING(20), allowNull: false, defaultValue: "#3b82f6" },
-    sort_order: { type: DataTypes.SMALLINT.UNSIGNED, allowNull: false, defaultValue: 0 },
-  },
+    sort_order: { type: dbSmallInt, allowNull: false, defaultValue: 0 },
+  } as never,
   { sequelize, tableName: "staff_members", modelName: "StaffMember" }
 );

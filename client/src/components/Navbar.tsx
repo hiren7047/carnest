@@ -2,7 +2,10 @@ import { Link } from "react-router-dom";
 import { ChevronDown, Menu, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { useAuth } from "@/context/AuthContext";
+import { useAppAuth } from "@/context/DemoAuthContext";
+import { useAppPath } from "@/hooks/useAppPath";
+import { appPath } from "@/lib/demoMode";
+import { useDemo } from "@/context/DemoContext";
 import { useTheme } from "next-themes";
 import { MobileNavDrawer } from "@/components/MobileNavDrawer";
 import { primaryNavItems } from "@/config/nav";
@@ -19,8 +22,18 @@ const exploreItems = primaryNavItems.filter((p) => !pinnedPaths.has(p.to));
 
 const Navbar = () => {
   const [mobileOpen, setMobileOpen] = useState(false);
-  const { user, logout } = useAuth();
+  const { user, logout } = useAppAuth();
   const { theme, setTheme } = useTheme();
+  const home = useAppPath("/");
+  const cars = useAppPath("/cars");
+  const sell = useAppPath("/sell");
+  const contact = useAppPath("/contact");
+  const admin = useAppPath("/admin");
+  const login = useAppPath("/login");
+  const dashboard = useAppPath("/dashboard");
+  const register = useAppPath("/register");
+  const demo = useDemo();
+  const pathFor = (p: string) => appPath(demo?.slug ?? null, p);
 
   return (
     <>
@@ -30,25 +43,25 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center gap-6 lg:gap-8">
             <Link
-              to="/"
+              to={home}
               className="text-sm font-medium text-foreground/80 hover:text-secondary transition-colors"
             >
               Home
             </Link>
             <Link
-              to="/cars"
+              to={cars}
               className="text-sm font-medium text-foreground/80 hover:text-secondary transition-colors"
             >
               Car Stock
             </Link>
             <Link
-              to="/sell"
+              to={sell}
               className="text-sm font-medium text-foreground/80 hover:text-secondary transition-colors"
             >
               Sell Your Car
             </Link>
             <Link
-              to="/contact"
+              to={contact}
               className="text-sm font-medium text-foreground/80 hover:text-secondary transition-colors"
             >
               Contact
@@ -61,14 +74,14 @@ const Navbar = () => {
               <DropdownMenuContent align="end" className="w-52 max-h-[min(70vh,24rem)] overflow-y-auto">
                 {exploreItems.map(({ to, label }) => (
                   <DropdownMenuItem key={to} asChild>
-                    <Link to={to}>{label}</Link>
+                    <Link to={pathFor(to)}>{label}</Link>
                   </DropdownMenuItem>
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
             {user?.role === "admin" && (
               <Link
-                to="/admin"
+                to={admin}
                 className="text-sm font-medium text-foreground/80 hover:text-secondary transition-colors"
               >
                 Admin
@@ -90,7 +103,7 @@ const Navbar = () => {
             {user ? (
               <>
                 <Button variant="ghost" size="sm" asChild>
-                  <Link to="/dashboard">Dashboard</Link>
+                  <Link to={dashboard}>Dashboard</Link>
                 </Button>
                 <Button variant="outline" size="sm" onClick={logout}>
                   Log out
@@ -99,10 +112,10 @@ const Navbar = () => {
             ) : (
               <>
                 <Button variant="ghost" size="sm" asChild>
-                  <Link to="/login">Sign In</Link>
+                  <Link to={login}>Sign In</Link>
                 </Button>
                 <Button variant="cta" size="sm" asChild>
-                  <Link to="/register">Join</Link>
+                  <Link to={register}>Join</Link>
                 </Button>
               </>
             )}

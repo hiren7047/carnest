@@ -1,5 +1,6 @@
 import axios from "axios";
 import { toast } from "sonner";
+import { getActiveDemoSlug, rewriteApiUrlForDemo, demoStorageKey } from "@/lib/demoMode";
 
 const baseURL = import.meta.env.VITE_API_URL ?? "";
 
@@ -10,6 +11,9 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((config) => {
+  if (config.url) {
+    config.url = rewriteApiUrlForDemo(config.url);
+  }
   if (config.data instanceof FormData) {
     const h = config.headers;
     if (h && typeof (h as { delete?: (k: string) => void }).delete === "function") {
@@ -18,7 +22,10 @@ api.interceptors.request.use((config) => {
       delete (h as Record<string, unknown>)["Content-Type"];
     }
   }
-  const token = localStorage.getItem("token");
+  const slug = getActiveDemoSlug();
+  const token = slug
+    ? localStorage.getItem(demoStorageKey(slug, "token"))
+    : localStorage.getItem("token");
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }

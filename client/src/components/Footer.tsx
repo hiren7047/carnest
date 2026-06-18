@@ -7,6 +7,8 @@ import { useSiteContent } from "@/hooks/useSitePublic";
 import { useState } from "react";
 import { toast } from "sonner";
 import { BrandLogo } from "./BrandLogo";
+import { useDemo } from "@/context/DemoContext";
+import { appPath } from "@/lib/demoMode";
 
 const quickLinks: { label: string; to: string }[] = [
   { label: "Browse Cars", to: "/cars" },
@@ -32,7 +34,10 @@ function openSocial(url: string, label: string) {
 const Footer = () => {
   const searchBrands = useSearchBrands();
   const { social } = useSiteContent();
+  const demo = useDemo();
+  const to = (path: string) => appPath(demo?.slug ?? null, path);
   const [email, setEmail] = useState("");
+  const brandName = demo?.branding.business_name ?? demo?.clientName ?? "Carnest";
 
   const instagramDisplay = social.instagramHandle
     ? `@${social.instagramHandle.replace(/^@/, "")}`
@@ -104,15 +109,18 @@ const Footer = () => {
             <div>
               <h4 className="font-heading font-semibold mb-4">Quick Links</h4>
               <div className="flex flex-col gap-2.5">
-                {quickLinks.map(({ label, to }) => (
+                {quickLinks.map(({ label, to: path }) => {
+                  const href = path === "/#how-it-works" ? `${to("/")}#how-it-works` : to(path);
+                  return (
                   <Link
-                    key={to + label}
-                    to={to}
+                    key={path + label}
+                    to={href}
                     className="text-sm text-primary-foreground/60 hover:text-secondary transition-colors"
                   >
                     {label}
                   </Link>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
@@ -122,7 +130,7 @@ const Footer = () => {
                 {searchBrands.slice(0, 8).map((b) => (
                   <Link
                     key={b}
-                    to={`/cars?brand=${encodeURIComponent(b)}`}
+                    to={to(`/cars?brand=${encodeURIComponent(b)}`)}
                     className="text-sm text-primary-foreground/60 hover:text-secondary transition-colors"
                   >
                     {b}
@@ -156,15 +164,15 @@ const Footer = () => {
         </ScrollReveal>
 
         <div className="border-t border-primary-foreground/10 mt-12 pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-sm text-primary-foreground/40">
-          <span>© 2026 Carnest. All rights reserved.</span>
+          <span>© 2026 {brandName}. All rights reserved.</span>
           <div className="flex gap-4">
-            <Link to="/privacy" className="hover:text-secondary transition-colors">
+            <Link to={to("/privacy")} className="hover:text-secondary transition-colors">
               Privacy
             </Link>
-            <Link to="/terms" className="hover:text-secondary transition-colors">
+            <Link to={to("/terms")} className="hover:text-secondary transition-colors">
               Terms
             </Link>
-            <Link to="/contact" className="hover:text-secondary transition-colors">
+            <Link to={to("/contact")} className="hover:text-secondary transition-colors">
               Contact
             </Link>
           </div>

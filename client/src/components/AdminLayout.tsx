@@ -1,5 +1,8 @@
 import { Link, NavLink, Outlet, useLocation } from "react-router-dom";
-import { useAuth } from "@/context/AuthContext";
+import { useAppAuth } from "@/context/DemoAuthContext";
+import { useAppPath } from "@/hooks/useAppPath";
+import { useDemo } from "@/context/DemoContext";
+import { appPath } from "@/lib/demoMode";
 import { useTheme } from "next-themes";
 import {
   SidebarProvider,
@@ -72,19 +75,32 @@ function NavItem({
 }
 
 const AdminLayout = () => {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAppAuth();
   const { theme, setTheme } = useTheme();
+  const demo = useDemo();
+  const home = useAppPath("/");
+  const adminTitle = demo?.branding.business_name
+    ? `${demo.branding.business_name} Admin`
+    : "Carnest Admin";
+  const navWithPaths = nav.map((item) => ({
+    ...item,
+    to: appPath(demo?.slug ?? null, item.to),
+  }));
 
   return (
     <SidebarProvider>
       <Sidebar collapsible="icon" variant="inset">
         <SidebarHeader className="border-b border-sidebar-border">
           <Link
-            to="/"
+            to={home}
             className="flex items-center gap-2 rounded-md px-2 py-1.5 text-sm font-heading font-bold text-sidebar-foreground hover:bg-sidebar-accent"
           >
-            <Car className="h-6 w-6 text-secondary" />
-            <span className="font-heading">Carnest Admin</span>
+            {demo?.branding.logo_url ? (
+              <img src={demo.branding.logo_url} alt="" className="h-6 w-auto object-contain" />
+            ) : (
+              <Car className="h-6 w-6 text-secondary" />
+            )}
+            <span className="font-heading">{adminTitle}</span>
           </Link>
         </SidebarHeader>
         <SidebarContent>
@@ -92,7 +108,7 @@ const AdminLayout = () => {
             <SidebarGroupLabel>Menu</SidebarGroupLabel>
             <SidebarGroupContent>
               <SidebarMenu>
-                {nav.map((item) => (
+                {navWithPaths.map((item) => (
                   <NavItem key={item.to} {...item} />
                 ))}
               </SidebarMenu>
@@ -101,7 +117,7 @@ const AdminLayout = () => {
         </SidebarContent>
         <SidebarFooter className="border-t border-sidebar-border">
           <Link
-            to="/"
+            to={home}
             className={cn(
               "flex items-center gap-2 rounded-md px-2 py-1.5 text-xs text-muted-foreground hover:text-sidebar-foreground"
             )}
@@ -134,6 +150,11 @@ const AdminLayout = () => {
           </div>
         </header>
         <div className="flex-1 overflow-auto p-4 md:p-6">
+          {demo && (
+            <div className="mb-4 rounded-lg border border-secondary/30 bg-secondary/5 px-4 py-2 text-sm text-muted-foreground">
+              Demo mode — car inventory is sample data (read-only). CMS changes save for this demo only.
+            </div>
+          )}
           <Outlet />
         </div>
       </SidebarInset>

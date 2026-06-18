@@ -7,12 +7,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
 import { fetchCars } from "@/services/cars.service";
 import { mapApiCarToView } from "@/types/car";
+import { useAppPath } from "@/hooks/useAppPath";
 import { Skeleton } from "@/components/ui/skeleton";
 
 const INITIAL = 10;
 const STEP = 10;
 
 const FeaturedCars = () => {
+  const carsPath = useAppPath("/cars");
   const { data, isLoading } = useQuery({
     queryKey: ["cars", "featured-home"],
     queryFn: () => fetchCars({ featured: true, limit: 100, sort: "year", order: "desc" }),
@@ -45,7 +47,7 @@ const FeaturedCars = () => {
                 Handpicked For You
               </h2>
             </div>
-            <Link to="/cars" className="hidden md:flex">
+            <Link to={carsPath} className="hidden md:flex">
               <Button variant="ghost" className="gap-1 text-secondary hover:text-secondary/80">
                 View All <ArrowRight className="h-4 w-4" />
               </Button>
@@ -75,7 +77,7 @@ const FeaturedCars = () => {
           </>
         )}
         <div className="mt-8 text-center md:hidden">
-          <Link to="/cars">
+          <Link to={carsPath}>
             <Button variant="outline">View All Cars</Button>
           </Link>
         </div>

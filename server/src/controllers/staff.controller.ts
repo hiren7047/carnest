@@ -355,8 +355,8 @@ export async function listAvailableCarsForSale(_req: Request, res: Response): Pr
   try {
     const rows = await Car.findAll({
       where: {
-        [Op.or]: [{ listing_status: "available" }, { listing_status: { [Op.is]: null } }],
-      },
+        [Op.or]: [{ listing_status: "available" }, { listing_status: null }],
+      } as never,
       order: [["brand", "ASC"], ["title", "ASC"]],
       attributes: ["id", "title", "brand", "model", "year", "price", "images"],
     });

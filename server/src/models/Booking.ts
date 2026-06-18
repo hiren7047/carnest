@@ -1,3 +1,4 @@
+import { dbInteger, dbSmallInt, dbTinyInt, dbBigInt } from "../lib/dbTypes.js";
 import {
   DataTypes,
   Model,
@@ -22,12 +23,12 @@ export class Booking extends Model<InferAttributes<Booking>, InferCreationAttrib
 Booking.init(
   {
     id: {
-      type: DataTypes.INTEGER.UNSIGNED,
+      type: dbInteger,
       autoIncrement: true,
       primaryKey: true,
     },
-    user_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
-    car_id: { type: DataTypes.INTEGER.UNSIGNED, allowNull: false },
+    user_id: { type: dbInteger, allowNull: false },
+    car_id: { type: dbInteger, allowNull: false },
     date: { type: DataTypes.DATEONLY, allowNull: false },
     status: {
       type: DataTypes.ENUM("pending", "confirmed", "cancelled"),

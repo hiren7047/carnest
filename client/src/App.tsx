@@ -37,6 +37,7 @@ import About from "./pages/About.tsx";
 import Faqs from "./pages/Faqs.tsx";
 import Blogs from "./pages/Blogs.tsx";
 import BlogPost from "./pages/BlogPost.tsx";
+import { DemoShell } from "@/components/DemoShell";
 
 function ScrollToTop() {
   const { pathname } = useLocation();
@@ -48,7 +49,19 @@ function ScrollToTop() {
 
 function PublicChrome() {
   const { pathname } = useLocation();
-  if (pathname.startsWith("/admin")) return null;
+  if (pathname.startsWith("/admin") || pathname.startsWith("/d/")) return null;
+  return (
+    <>
+      <MobileBottomNav />
+      <FloatingActions />
+    </>
+  );
+}
+
+function DemoChrome() {
+  const { pathname } = useLocation();
+  if (!pathname.startsWith("/d/")) return null;
+  if (pathname.includes("/admin")) return null;
   return (
     <>
       <MobileBottomNav />
@@ -65,6 +78,54 @@ const App = () => (
       <ScrollToTop />
       <div className="min-h-screen pb-[calc(5rem+env(safe-area-inset-bottom,0px))] md:pb-0">
         <Routes>
+          <Route path="/d/:demoSlug" element={<DemoShell />}>
+            <Route index element={<Index />} />
+            <Route path="cars" element={<CarsListing />} />
+            <Route path="cars/:id" element={<CarDetail />} />
+            <Route path="sell" element={<SellYourCar />} />
+            <Route path="contact" element={<Contact />} />
+            <Route path="finance" element={<Finance />} />
+            <Route path="insurance" element={<Insurance />} />
+            <Route path="gallery" element={<Gallery />} />
+            <Route path="reviews" element={<Reviews />} />
+            <Route path="why-us" element={<WhyUs />} />
+            <Route path="warranty" element={<Warranty />} />
+            <Route path="about" element={<About />} />
+            <Route path="faqs" element={<Faqs />} />
+            <Route path="blogs" element={<Blogs />} />
+            <Route path="blogs/:slug" element={<BlogPost />} />
+            <Route path="privacy" element={<Privacy />} />
+            <Route path="terms" element={<Terms />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route
+              path="dashboard"
+              element={
+                <ProtectedRoute>
+                  <Dashboard />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="admin"
+              element={
+                <AdminRoute>
+                  <AdminLayout />
+                </AdminRoute>
+              }
+            >
+              <Route index element={<AdminDashboard />} />
+              <Route path="cars" element={<AdminCars />} />
+              <Route path="sell-inquiries" element={<AdminSellInquiries />} />
+              <Route path="bookings" element={<AdminBookings />} />
+              <Route path="homepage" element={<AdminHomepage />} />
+              <Route path="gallery" element={<AdminGallery />} />
+              <Route path="reviews" element={<AdminReviews />} />
+              <Route path="staff" element={<AdminStaff />} />
+              <Route path="settings" element={<AdminSettings />} />
+            </Route>
+            <Route path="*" element={<NotFound />} />
+          </Route>
           <Route path="/" element={<Index />} />
           <Route path="/cars" element={<CarsListing />} />
           <Route path="/cars/:id" element={<CarDetail />} />
@@ -114,6 +175,7 @@ const App = () => (
         </Routes>
       </div>
       <PublicChrome />
+      <DemoChrome />
     </BrowserRouter>
   </TooltipProvider>
 );

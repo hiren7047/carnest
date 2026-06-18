@@ -3,7 +3,10 @@ import { X } from "lucide-react";
 import { Sheet, SheetClose, SheetContent, SheetTitle } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { primaryNavItems } from "@/config/nav";
-import { useAuth } from "@/context/AuthContext";
+import { useAppAuth } from "@/context/DemoAuthContext";
+import { useAppPath } from "@/hooks/useAppPath";
+import { appPath } from "@/lib/demoMode";
+import { useDemo } from "@/context/DemoContext";
 import { BrandLogo } from "@/components/BrandLogo";
 
 type MobileNavDrawerProps = {
@@ -12,7 +15,13 @@ type MobileNavDrawerProps = {
 };
 
 export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
-  const { user, logout } = useAuth();
+  const { user, logout } = useAppAuth();
+  const demo = useDemo();
+  const pathFor = (p: string) => appPath(demo?.slug ?? null, p);
+  const admin = useAppPath("/admin");
+  const dashboard = useAppPath("/dashboard");
+  const login = useAppPath("/login");
+  const register = useAppPath("/register");
 
   const close = () => onOpenChange(false);
 
@@ -42,7 +51,7 @@ export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
           {primaryNavItems.map(({ to, label, icon: Icon }) => (
             <Link
               key={to}
-              to={to}
+              to={pathFor(to)}
               onClick={close}
               className="flex items-center gap-3 border-b border-zinc-800/80 px-4 py-3.5 text-sm font-medium text-zinc-100 hover:bg-zinc-900 transition-colors"
             >
@@ -59,7 +68,7 @@ export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
               className="w-full border-zinc-500 bg-zinc-900 font-semibold text-zinc-50 hover:bg-zinc-800 hover:text-white"
               asChild
             >
-              <Link to="/admin" onClick={close}>
+              <Link to={admin} onClick={close}>
                 Admin
               </Link>
             </Button>
@@ -71,7 +80,7 @@ export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
                 className="w-full border-zinc-500 bg-zinc-900 font-semibold text-zinc-50 hover:bg-zinc-800 hover:text-white"
                 asChild
               >
-                <Link to="/dashboard" onClick={close}>
+                <Link to={dashboard} onClick={close}>
                   Dashboard
                 </Link>
               </Button>
@@ -93,12 +102,12 @@ export function MobileNavDrawer({ open, onOpenChange }: MobileNavDrawerProps) {
                 className="w-full border-zinc-500 bg-zinc-900 font-semibold text-zinc-50 shadow-none hover:bg-zinc-800 hover:text-white"
                 asChild
               >
-                <Link to="/login" onClick={close}>
+                <Link to={login} onClick={close}>
                   Sign In
                 </Link>
               </Button>
               <Button variant="cta" className="w-full font-semibold" asChild>
-                <Link to="/register" onClick={close}>
+                <Link to={register} onClick={close}>
                   Join
                 </Link>
               </Button>
