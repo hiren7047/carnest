@@ -128,6 +128,26 @@ pm2 save
 curl -s http://127.0.0.1:4001/api/health
 ```
 
+### Car images (template inventory)
+
+Seed runs with empty `uploads/` → cars show Lovable placeholder. Copy production car photos **read-only** into demo uploads, then sync DB:
+
+```bash
+# Copy car folders only (production untouched)
+DEMO_UP=/var/www/demo-khodi/carnest/server/uploads
+PROD_UP=/var/www/carnest/server/uploads
+mkdir -p "$DEMO_UP"
+for d in MG alcazar "kia seltos" creta rapid "tata hexa" xcent jaguar mercedese; do
+  cp -a "$PROD_UP/$d" "$DEMO_UP/" 2>/dev/null || true
+done
+chmod -R 755 "$DEMO_UP"
+
+cd /var/www/demo-khodi/carnest/server
+npm run sync:template-cars
+```
+
+Verify: `curl -s https://demo.khodi.in/api/demo/sitaram-car-melo/cars?limit=1 | head -c 400` — `images` should start with `/uploads/`.
+
 ---
 
 ## STEP 4 — Frontends
@@ -225,6 +245,55 @@ pm2 status
 ```
 
 **`pm2 restart carnest-api` — NATHI.**
+
+---
+
+## Troubleshooting
+
+### `hub.demo.khodi.in` → **500 Internal Server Error**
+
+Nginx `root` folder missing or empty. Hub client build **alag** che — `client` build thi hub fix nathi thatu.
+
+```bash
+ls -la /var/www/demo-khodi/carnest/demo-hub/client/dist/index.html
+# "No such file" → build karo:
+
+cd /var/www/demo-khodi/carnest/demo-hub/client
+npm ci && npm run build
+ls -la dist/index.html
+
+sudo nginx -t && sudo systemctl reload nginx
+```
+
+Still 500? Check nginx error log:
+
+```bash
+sudo tail -20 /var/log/nginx/error.log
+```
+
+### Car cards show “Your app will live here” / Lovable placeholder
+
+`template_cars.images` = `/placeholder.svg` because demo `uploads/` was empty at seed time. Fix: copy car folders from production + `npm run sync:template-cars` (see STEP 3 above).
+
+### Demo logo too small in header/footer
+
+Custom hub logos use larger CSS after client rebuild. Re-upload logo in hub if it still looks wrong (use PNG/SVG ~400px wide).
+
+### `demo.khodi.in` root `/` par Carnest landing page
+
+**Expected.** Root = main site. Client demo **`/d/{slug}`** par chale (e.g. `https://demo.khodi.in/d/your-slug`). Pehla hub ma demo create karo.
+
+### Hub login fails (browser, not 500)
+
+`.env` ma URLs set karo ane restart:
+
+```env
+CLIENT_URLS=https://demo.khodi.in,https://hub.demo.khodi.in
+```
+
+```bash
+pm2 restart demo-api
+```
 
 ---
 

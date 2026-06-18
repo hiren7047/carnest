@@ -71,8 +71,12 @@ export function createSequelize({
   const username =
     readEnv(prefix, "DB_USER", prefix ? process.env.DB_USER : undefined) ??
     (dialect === "postgres" ? "postgres" : "root");
-  const password =
-    readEnv(prefix, "DB_PASSWORD", prefix ? process.env.DB_PASSWORD : undefined) ?? "";
+  const rawPassword = readEnv(prefix, "DB_PASSWORD", prefix ? process.env.DB_PASSWORD : undefined);
+  const password = rawPassword == null ? "" : String(rawPassword);
+  if (dialect === "postgres" && password === "") {
+    const label = prefix ? "DEMO_HUB_DB_PASSWORD" : "DB_PASSWORD";
+    console.warn(`[DB] Warning: ${label} is empty — PostgreSQL auth will fail. Set it in server/.env`);
+  }
 
   const timezone =
     readEnv(prefix, "DB_TIMEZONE", process.env.DB_TIMEZONE ?? "+05:30") ?? "+05:30";

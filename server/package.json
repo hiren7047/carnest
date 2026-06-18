@@ -11,6 +11,7 @@
     "seed:demo-hub": "tsx scripts/seed-demo-hub.ts",
     "seed:refresh": "tsx scripts/seed.ts --force",
     "sync:cars": "tsx scripts/sync-car-images.ts",
+    "sync:template-cars": "tsx scripts/sync-template-cars.ts",
     "create-admin": "tsx scripts/create-admin.ts",
     "test": "tsx --test src/__tests__/smoke.test.ts"
   },
