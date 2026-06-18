@@ -1,52 +1,45 @@
 # Carnest
 
-Premium used-car marketplace: **React (Vite) client** + **Express + Sequelize + MySQL** API.
+Premium used-car marketplace + **multi-client demo platform**.
+
+- **PostgreSQL** (`carnest_db`) — production + demo hub tables
+- **Express API** (`server/`)
+- **Public site + demo runtime** (`client/`) — `/d/:slug`
+- **Demo Hub admin** (`demo-hub/client/`) — create/manage client demos
 
 ## Prerequisites
 
 - Node.js 20+
-- MySQL 8+
+- PostgreSQL 14+ (or Docker: `docker compose up -d`)
 
 ## Quick start
 
-### 1. Database
-
-Create a database named `carnest` (or set `DB_NAME` in `server/.env`).
-
-### 2. API (`server/`)
+See [`LOCAL_SETUP.md`](LOCAL_SETUP.md).
 
 ```bash
-cd server
-cp .env.example .env
-# Edit .env with your MySQL credentials and JWT_SECRET
-npm install
-npm run seed
-npm run dev
+cd server && cp .env.local.example .env && npm install && npm run dev
+cd client && npm install && npm run dev
+cd demo-hub/client && npm install && npm run dev
 ```
 
-API listens on **http://localhost:4000** by default.
-
-**Development admin (after seed):** see console output from `npm run seed` — change this password in production.
-
-### 3. Client (`client/`)
-
-```bash
-cd client
-cp .env.example .env
-npm install
-npm run dev
-```
-
-Client runs on **http://localhost:8080** and proxies `/api` to the API in development (`vite.config.ts`).
+| App | URL |
+|-----|-----|
+| API | http://localhost:4000 |
+| Client | http://localhost:8080 |
+| Hub | http://localhost:8090 |
 
 ## Project layout
 
-- [`client/`](client/) — Vite + React + TypeScript + Tailwind + React Router + Axios + TanStack Query
-- [`server/`](server/) — Express + Sequelize + JWT + Multer
+```
+carnest/
+├── server/           API (Express + Sequelize)
+├── client/           Carnest + demo routes (/d/:slug)
+├── demo-hub/client/  Hub dashboard (create demos)
+├── LOCAL_SETUP.md
+└── DEPLOY-DEMO-KHODI.md
+```
 
-## Production notes
+## Production
 
-- Set `VITE_API_URL` on the client to your public API origin.
-- Set `CLIENT_URL` on the server for CORS.
-- Use strong `JWT_SECRET`, HTTPS, and managed MySQL.
-- Optional: configure Cloudinary in `server/.env` for uploads (see `server/.env.example`).
+- Main site: [`DEPLOYMENT.md`](DEPLOYMENT.md) — carnest.in
+- Demo platform: [`DEPLOY-DEMO-KHODI.md`](DEPLOY-DEMO-KHODI.md) — demo.khodi.in

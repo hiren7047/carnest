@@ -1,17 +1,27 @@
 # Deploy — demo.khodi.in (PostgreSQL / carnest_db)
 
-**carnest.in safe** — alag folder, alag PM2, port `4001`, navo nginx only.
+**carnest.in safe** — alag folder, alag PM2 `demo-api` port `4001`, navo nginx only.
+
+## Repo structure (after `git clone`)
+
+```
+/var/www/demo-khodi/carnest/
+├── server/           → demo-api (PM2)
+├── client/           → demo.khodi.in
+├── demo-hub/client/  → hub.demo.khodi.in
+└── DEPLOY-DEMO-KHODI.md
+```
 
 ---
 
-## Server facts (confirmed)
+## Server facts
 
 | Item | Value |
 |------|--------|
 | DB | `carnest_db` @ `127.0.0.1:5432` |
-| Production API | `carnest-api` → `:4000` |
-| Demo API (navo) | `demo-api` → `:4001` |
-| Production tables | 10 — **touch nahi** |
+| Production API | `carnest-api` → `:4000` (**touch nahi**) |
+| Demo API | `demo-api` → `:4001` |
+| Production tables | 10 existing |
 | Demo tables | `demos`, `template_cars`, `hub_admins`, … |
 
 ---
@@ -23,7 +33,19 @@
 
 ---
 
-## STEP 1 — PostgreSQL user
+## STEP 1 — Clone (one repo — server + client + hub)
+
+```bash
+mkdir -p /var/www/demo-khodi
+cd /var/www/demo-khodi
+git clone https://github.com/hiren7047/carnest.git
+cd carnest
+ls server client demo-hub/client
+```
+
+---
+
+## STEP 2 — PostgreSQL user
 
 ```bash
 sudo -u postgres psql <<'SQL'
@@ -33,15 +55,6 @@ GRANT USAGE ON SCHEMA public TO carnest_demo;
 GRANT SELECT ON ALL TABLES IN SCHEMA public TO carnest_demo;
 GRANT SELECT ON ALL SEQUENCES IN SCHEMA public TO carnest_demo;
 SQL
-```
-
----
-
-## STEP 2 — Clone repo
-
-```bash
-mkdir -p /var/www/demo-khodi && cd /var/www/demo-khodi
-git clone YOUR_REPO_URL .
 ```
 
 ---
@@ -61,6 +74,8 @@ DB_NAME=carnest_db
 DB_USER=carnest_demo
 DB_PASSWORD=STRONG_PASSWORD
 DB_SYNC_ALTER=false
+DB_TIMEZONE=+05:30
+DB_SSL=false
 
 DEMO_HUB_DB_HOST=127.0.0.1
 DEMO_HUB_DB_PORT=5432
@@ -70,28 +85,39 @@ DEMO_HUB_DB_PASSWORD=STRONG_PASSWORD
 DEMO_HUB_DB_SYNC_ALTER=true
 
 JWT_SECRET=<openssl rand -hex 32>
+JWT_EXPIRES_IN=7d
+
 CLIENT_URL=https://demo.khodi.in
 CLIENT_URLS=https://demo.khodi.in,https://hub.demo.khodi.in
+UPLOAD_DIR=uploads
 PUBLIC_BASE_URL=https://demo.khodi.in
 DEMO_PUBLIC_BASE_URL=https://demo.khodi.in/d
+
 HUB_ADMIN_EMAIL=you@carnest.in
 HUB_ADMIN_PASSWORD=HubAdmin123!
 ```
 
 ```bash
 cd /var/www/demo-khodi/carnest/server
+openssl rand -hex 32
+mkdir -p uploads && chmod 755 uploads
 npm ci && npm run build
 npm run seed:demo-hub
 ```
 
 Grant demo tables:
+
 ```bash
-sudo -u postgres psql -d carnest_db -c "
-GRANT ALL ON TABLE demos, hub_admins, demo_branding, demo_site_content, demo_contact,
-  template_cars, template_users, template_staff_members, template_staff_monthly_targets,
-  template_car_sales, demo_sandbox_bookings, demo_sandbox_sell_requests,
-  demo_sandbox_contact_inquiries TO carnest_demo;
-"
+sudo -u postgres psql -d carnest_db <<'SQL'
+GRANT ALL ON TABLE
+  demos, hub_admins, demo_branding, demo_site_content, demo_contact,
+  template_cars, template_users, template_staff_members,
+  template_staff_monthly_targets, template_car_sales,
+  demo_sandbox_bookings, demo_sandbox_sell_requests,
+  demo_sandbox_contact_inquiries
+TO carnest_demo;
+GRANT USAGE, SELECT ON ALL SEQUENCES IN SCHEMA public TO carnest_demo;
+SQL
 ```
 
 Set `DEMO_HUB_DB_SYNC_ALTER=false` in `.env`, then:
@@ -107,30 +133,95 @@ curl -s http://127.0.0.1:4001/api/health
 ## STEP 4 — Frontends
 
 ```bash
-cd /var/www/demo-khodi/carnest/client && npm ci && npm run build
-cd /var/www/demo-khodi/demo-hub/client && npm ci && npm run build
+cd /var/www/demo-khodi/carnest/client
+npm ci && npm run build
+
+cd /var/www/demo-khodi/carnest/demo-hub/client
+npm ci && npm run build
 ```
 
 ---
 
 ## STEP 5 — Nginx
 
-Create `demo.khodi.in` + `hub.demo.khodi.in` (see prior plan) — proxy `/api` → `127.0.0.1:4001`.
+**`/etc/nginx/sites-available/demo.khodi.in`**
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name demo.khodi.in;
+
+    root /var/www/demo-khodi/carnest/client/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api {
+        proxy_pass http://127.0.0.1:4001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    location /uploads {
+        proxy_pass http://127.0.0.1:4001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+    }
+
+    client_max_body_size 25M;
+}
+```
+
+**`/etc/nginx/sites-available/hub.demo.khodi.in`**
+
+```nginx
+server {
+    listen 80;
+    listen [::]:80;
+    server_name hub.demo.khodi.in;
+
+    root /var/www/demo-khodi/carnest/demo-hub/client/dist;
+    index index.html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api {
+        proxy_pass http://127.0.0.1:4001;
+        proxy_http_version 1.1;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+    }
+
+    client_max_body_size 25M;
+}
+```
 
 ```bash
+sudo ln -sf /etc/nginx/sites-available/demo.khodi.in /etc/nginx/sites-enabled/
+sudo ln -sf /etc/nginx/sites-available/hub.demo.khodi.in /etc/nginx/sites-enabled/
 sudo nginx -t && sudo systemctl reload nginx
 sudo certbot --nginx -d demo.khodi.in -d hub.demo.khodi.in
 ```
 
 ---
 
-## STEP 6 — Verify (no conflict)
+## STEP 6 — Verify
 
 ```bash
-curl -s https://carnest.in/api/health          # production OK
-curl -s https://demo.khodi.in/api/health       # demo OK
-pm2 status                                       # carnest-api + demo-api
-sudo -u postgres psql -d carnest_db -c "\dt"   # 10 + demo tables
+curl -s https://carnest.in/api/health
+curl -s https://demo.khodi.in/api/health
+curl -sI https://hub.demo.khodi.in/
+pm2 status
 ```
 
 **`pm2 restart carnest-api` — NATHI.**
@@ -140,8 +231,10 @@ sudo -u postgres psql -d carnest_db -c "\dt"   # 10 + demo tables
 ## Updates (demo only)
 
 ```bash
-cd /var/www/demo-khodi/carnest/server && git pull && npm ci && npm run build && pm2 restart demo-api
+cd /var/www/demo-khodi/carnest
+git pull
+cd server && npm ci && npm run build && pm2 restart demo-api
 cd ../client && npm ci && npm run build
-cd ../../demo-hub/client && npm ci && npm run build
+cd ../demo-hub/client && npm ci && npm run build
 sudo systemctl reload nginx
 ```

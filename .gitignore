@@ -1,5 +1,7 @@
 server/.env
 client/.env
+demo-hub/client/.env
 
 server/node_modules
 client/node_modules
+demo-hub/client/node_modules
